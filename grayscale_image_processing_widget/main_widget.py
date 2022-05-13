@@ -9,6 +9,7 @@ from grayscale_image_processing_widget.defs import QtGui, QtCore, QtWidgets
 from grayscale_image_processing_widget.defs import get_project_root
 from grayscale_image_processing_widget.dock import ImgProcessDock
 from grayscale_image_processing_widget.image_widget import ImageWidget
+from grayscale_image_processing_widget.workers import ProcessWorker
 
 QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)
 QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
@@ -40,6 +41,9 @@ class ProcessWidget(QtWidgets.QMainWindow):
         self.img_widget = ImageWidget()
         main_layout.addWidget(self.img_widget)
 
+        self.process_thread = QtCore.QThread()
+        self.process_worker = None
+
         self.connect_ui()
 
         # load settings from previous session
@@ -61,10 +65,22 @@ class ProcessWidget(QtWidgets.QMainWindow):
             self.save_as_button_clicked
         )
 
+    def setup_start_process_worker(self, image):
+        self.process_worker = ProcessWorker(self.process_img, image)
+        self.process_worker.moveToThread(self.process_thread)
+        self.process_thread.started.connect(self.process_worker.run)
+        self.process_worker.finished.connect(self.finished_process)
+
+    def finished_process(self, processed_image):
+        self.process_thread.exit()
+        self.img_widget.setImage(processed_image)
+        self.setCursor(QtCore.Qt.ArrowCursor)
+
     def update_img(self):
         if self.img_path:
-            processed_img = self.process_img(self.original_img)
-            self.img_widget.setImage(processed_img)
+            self.setup_start_process_worker(self.original_img)
+            self.process_thread.start()
+            self.setCursor(QtCore.Qt.BusyCursor)
 
     def process_img(self, img):
         process_widget = self.dock.process_groupbox.stacked_layout.currentWidget()
