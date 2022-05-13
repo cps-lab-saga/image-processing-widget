@@ -1,0 +1,61 @@
+import cv2 as cv
+
+enum_border_types = {
+    "BORDER_CONSTANT": cv.BORDER_CONSTANT,
+    "BORDER_REPLICATE": cv.BORDER_REPLICATE,
+    "BORDER_REFLECT": cv.BORDER_REFLECT,
+    "BORDER_WRAP": cv.BORDER_WRAP,
+    "BORDER_REFLECT_101": cv.BORDER_REFLECT_101,
+    "BORDER_TRANSPARENT": cv.BORDER_TRANSPARENT,
+    "BORDER_ISOLATED ": cv.BORDER_ISOLATED,
+    "BORDER_DEFAULT": cv.BORDER_DEFAULT,
+}
+
+enum_morph_shapes = {
+    "MORPH_RECT": cv.MORPH_RECT,
+    "MORPH_CROSS": cv.MORPH_CROSS,
+    "MORPH_ELLIPSE": cv.MORPH_ELLIPSE,
+}
+
+enum_morph_types = {
+    "MORPH_ERODE": cv.MORPH_ERODE,
+    "MORPH_DILATE": cv.MORPH_DILATE,
+    "MORPH_OPEN": cv.MORPH_OPEN,
+    "MORPH_CLOSE": cv.MORPH_CLOSE,
+    "MORPH_GRADIENT": cv.MORPH_GRADIENT,
+    "MORPH_TOPHAT": cv.MORPH_TOPHAT,
+    "MORPH_BLACKHAT": cv.MORPH_BLACKHAT,
+}
+
+enum_thresholds = {
+    "THRESH_BINARY": cv.THRESH_BINARY,
+    "THRESH_BINARY_INV": cv.THRESH_BINARY_INV,
+    "THRESH_TRUNC": cv.THRESH_TRUNC,
+    "THRESH_TOZERO": cv.THRESH_TOZERO,
+    "THRESH_OTSU": cv.THRESH_OTSU,
+    "THRESH_TRIANGLE": cv.THRESH_TRIANGLE,
+}
+
+enum_contour_retrieval_modes = {
+    "RETR_EXTERNAL": cv.RETR_EXTERNAL,
+    "RETR_LIST": cv.RETR_LIST,
+    "RETR_CCOMP": cv.RETR_CCOMP,
+    "RETR_TREE": cv.RETR_TREE,
+    # "RETR_FLOODFILL": cv.RETR_FLOODFILL,
+}
+
+enum_contour_approx_modes = {
+    "CHAIN_APPROX_NONE": cv.CHAIN_APPROX_NONE,
+    "CHAIN_APPROX_SIMPLE": cv.CHAIN_APPROX_SIMPLE,
+    "CHAIN_APPROX_TC89_L1": cv.CHAIN_APPROX_TC89_L1,
+    "CHAIN_APPROX_TC89_KCOS": cv.CHAIN_APPROX_TC89_KCOS,
+}
+
+enum_depth = {
+    "uint8": cv.CV_8U,
+    "int8": cv.CV_8S,
+    "uint16": cv.CV_16U,
+    "int16": cv.CV_16S,
+    "float32": cv.CV_32F,
+    "float64": cv.CV_64F,
+}
