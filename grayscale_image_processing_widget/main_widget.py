@@ -23,6 +23,7 @@ class ProcessWidget(QtWidgets.QMainWindow):
 
         self.img_path = None
         self.original_img = None
+        self.processed_img = None
 
         self.setWindowTitle("Grayscale Image Processing")
         self.resize(1000, 500)
@@ -59,9 +60,9 @@ class ProcessWidget(QtWidgets.QMainWindow):
         self.img_widget.setFocus()
 
     def connect_ui(self):
-        self.dock.connect_ui(self.update_img)
+        self.dock.connect_ui(self.start_process_image)
         self.dock.peek_groupbox.peek_button.pressed.connect(self.peek_original_img)
-        self.dock.peek_groupbox.peek_button.released.connect(self.update_img)
+        self.dock.peek_groupbox.peek_button.released.connect(self.show_processed_image)
         self.dock.save_groupbox.save_button.clicked.connect(self.save_button_clicked)
         self.dock.save_groupbox.save_as_button.clicked.connect(
             self.save_as_button_clicked
@@ -71,14 +72,15 @@ class ProcessWidget(QtWidgets.QMainWindow):
         self.process_worker = ProcessWorker(self.process_img, image)
         self.process_worker.moveToThread(self.process_thread)
         self.process_thread.started.connect(self.process_worker.run)
-        self.process_worker.finished.connect(self.finished_process)
+        self.process_worker.finished.connect(self.finished_process_image)
 
-    def finished_process(self, processed_image):
+    def finished_process_image(self, processed_image):
         self.process_thread.exit()
-        self.img_widget.setImage(processed_image)
+        self.processed_img = processed_image
         self.setCursor(QtCore.Qt.ArrowCursor)
+        self.show_processed_image()
 
-    def update_img(self):
+    def start_process_image(self):
         if self.img_path:
             self.setup_start_process_worker(self.original_img)
             self.process_thread.start()
@@ -87,17 +89,19 @@ class ProcessWidget(QtWidgets.QMainWindow):
     def process_img(self, img):
         process_widget = self.dock.process_groupbox.stacked_layout.currentWidget()
         oriented_image = self.dock.orient_groupbox.orient_img(img)
-        processed_img = process_widget.process_img(oriented_image)
-        return processed_img
+        return process_widget.process_img(oriented_image)
 
     def peek_original_img(self):
         oriented_image = self.dock.orient_groupbox.orient_img(self.original_img)
         self.img_widget.setImage(oriented_image)
 
+    def show_processed_image(self):
+        self.img_widget.setImage(self.processed_img)
+
     def read_img(self, path):
         self.img_path = path
         self.original_img = cv.imread(str(self.img_path), cv.IMREAD_GRAYSCALE)
-        self.update_img()
+        self.start_process_image()
         self.dock.process_groupbox.adjust_range(self.original_img.shape)
 
     def dragEnterEvent(self, e):
@@ -134,11 +138,9 @@ class ProcessWidget(QtWidgets.QMainWindow):
         settings.setValue("Window/state", self.saveState())
 
     def gui_restore(self, settings):
-        geometry = settings.value("Window/geometry")
-        if geometry:
+        if geometry := settings.value("Window/geometry"):
             self.restoreGeometry(geometry)
-        state = settings.value("Window/state")
-        if state:
+        if state := settings.value("Window/state"):
             self.restoreState(state)
         self.dock.gui_restore(settings)
 
@@ -157,8 +159,9 @@ class ProcessWidget(QtWidgets.QMainWindow):
                 self, "Save As", str(self.img_path)
             )
             if save_url:
-                cv.imwrite(save_url, self.process_img(self.original_img))
-                self.ask_load_saved(Path(save_url))
+                save_path = Path(save_url)
+                if self.processed_img is not None:
+                    self.save_image(save_path, self.processed_img)
 
     def save_button_clicked(self):
         if self.img_path:
@@ -168,18 +171,26 @@ class ProcessWidget(QtWidgets.QMainWindow):
                 f"{self.img_path.name} already exists.\n" f"Do you want to replace it?",
                 QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
             )
-            if reply == QtWidgets.QMessageBox.Yes:
-                cv.imwrite(str(self.img_path), self.process_img(self.original_img))
-                self.ask_load_saved(Path(self.img_path))
+            if reply == QtWidgets.QMessageBox.Yes and self.processed_img is not None:
+                self.save_image(self.img_path, self.processed_img)
+
+    def save_image(self, save_path, img):
+        try:
+            cv.imwrite(str(save_path), img)
+        except Exception as e:
+            self.error_dialog(e.err)
+        else:
+            self.ask_load_saved(save_path)
 
     def ask_load_saved(self, save_path):
         if self.img_path:
             reply = QtWidgets.QMessageBox.warning(
                 self,
                 "Load Saved",
-                f"Do you want to load the saved file?",
+                "Do you want to load the saved file?",
                 QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
             )
+
             if reply == QtWidgets.QMessageBox.Yes:
                 self.read_img(save_path)
 
