@@ -5,8 +5,12 @@ from grayscale_image_processing_widget.custom_components.cv_enums import (
     enum_border_types,
     enum_morph_types,
 )
-from grayscale_image_processing_widget.custom_components.double_slider import DoubleSlider
-from grayscale_image_processing_widget.custom_components.gui_save_base import GuiSaveBase
+from grayscale_image_processing_widget.custom_components.double_slider import (
+    DoubleSlider,
+)
+from grayscale_image_processing_widget.custom_components.gui_save_base import (
+    GuiSaveBase,
+)
 from grayscale_image_processing_widget.defs import QtCore, QtWidgets
 
 

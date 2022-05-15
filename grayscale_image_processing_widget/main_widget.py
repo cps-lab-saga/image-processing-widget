@@ -3,7 +3,9 @@ from pathlib import Path
 import cv2 as cv
 import qtawesome as qta
 
-from grayscale_image_processing_widget.custom_components.mimetypes import check_file_type
+from grayscale_image_processing_widget.custom_components.mimetypes import (
+    check_file_type,
+)
 from grayscale_image_processing_widget.custom_components.my_colors import tab10_qcolor
 from grayscale_image_processing_widget.defs import QtGui, QtCore, QtWidgets
 from grayscale_image_processing_widget.defs import get_project_root

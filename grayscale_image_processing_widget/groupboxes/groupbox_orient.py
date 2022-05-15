@@ -4,7 +4,9 @@ import cv2 as cv
 import qtawesome as qta
 
 from grayscale_image_processing_widget.custom_components.badge_button import BadgeButton
-from grayscale_image_processing_widget.custom_components.gui_save_base import GuiSaveBase
+from grayscale_image_processing_widget.custom_components.gui_save_base import (
+    GuiSaveBase,
+)
 from grayscale_image_processing_widget.custom_components.my_colors import tab10_qcolor
 from grayscale_image_processing_widget.defs import QtCore, QtWidgets, Signal
 

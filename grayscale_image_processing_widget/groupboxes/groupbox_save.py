@@ -1,6 +1,8 @@
 import qtawesome as qta
 
-from grayscale_image_processing_widget.custom_components.gui_save_base import GuiSaveBase
+from grayscale_image_processing_widget.custom_components.gui_save_base import (
+    GuiSaveBase,
+)
 from grayscale_image_processing_widget.defs import QtCore, QtWidgets
 
 

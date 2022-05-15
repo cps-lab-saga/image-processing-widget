@@ -3,8 +3,12 @@ import math
 import cv2 as cv
 import numpy as np
 
-from grayscale_image_processing_widget.custom_components.double_slider import DoubleSlider
-from grayscale_image_processing_widget.custom_components.gui_save_base import GuiSaveBase
+from grayscale_image_processing_widget.custom_components.double_slider import (
+    DoubleSlider,
+)
+from grayscale_image_processing_widget.custom_components.gui_save_base import (
+    GuiSaveBase,
+)
 from grayscale_image_processing_widget.defs import QtCore, QtWidgets
 
 

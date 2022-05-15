@@ -4,7 +4,9 @@ from grayscale_image_processing_widget.custom_components.cv_enums import (
     enum_contour_retrieval_modes,
     enum_contour_approx_modes,
 )
-from grayscale_image_processing_widget.custom_components.gui_save_base import GuiSaveBase
+from grayscale_image_processing_widget.custom_components.gui_save_base import (
+    GuiSaveBase,
+)
 from grayscale_image_processing_widget.defs import QtWidgets
 
 

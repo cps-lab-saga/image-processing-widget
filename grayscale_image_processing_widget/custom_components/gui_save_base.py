@@ -1,7 +1,9 @@
 import inspect
 from distutils.util import strtobool
 
-from grayscale_image_processing_widget.custom_components.double_slider import DoubleSlider
+from grayscale_image_processing_widget.custom_components.double_slider import (
+    DoubleSlider,
+)
 from grayscale_image_processing_widget.defs import QtWidgets
 
 

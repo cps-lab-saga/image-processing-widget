@@ -1,6 +1,11 @@
 from grayscale_image_processing_widget.defs import QtCore, QtWidgets
 
-from grayscale_image_processing_widget.groupboxes import OrientGroupBox, PeekGroupBox, ProcessGroupBox, SaveGroupBox
+from grayscale_image_processing_widget.groupboxes import (
+    OrientGroupBox,
+    PeekGroupBox,
+    ProcessGroupBox,
+    SaveGroupBox,
+)
 
 
 class ImgProcessDock(QtWidgets.QDockWidget):
