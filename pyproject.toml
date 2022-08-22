@@ -1,23 +1,26 @@
 [tool.poetry]
-name = "grayscale-image-processing-widget"
-version = "0.1.1"
-description = "GUI to explore OpenCV grayscale image processing functions"
+name = "image-processing-widget"
+version = "0.2.0"
+description = "GUI to explore OpenCV image processing functions"
 authors = ["wenliangyeoh <wlyeoh@cc.saga-u.ac.jp>"]
 
 [tool.poetry.dependencies]
-python = ">=3.8,<3.11"
-opencv-python = "^4.5.5"
-PySide6 = "^6.3.0"
+python = ">3.10, <3.11"
 pyqtgraph = "^0.12.4"
+opencv-python = "~4.5"
 QtAwesome = "^1.1.1"
+Yapsy = "^1.12.2"
+PyQt6 = "^6.3.1"
+numpy = "^1.23.2"
 
 [tool.poetry.dev-dependencies]
-black = "^22.3.0"
-pyinstaller = "^5.0.1"
+black = "^22.6.0"
+pytest = "^7.1.2"
+pyinstaller = "~5.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-grayscale_image_processing = 'grayscale_image_processing_widget.main_widget:main'
+image_processing = 'image_processing_widget.main_widget:main'
