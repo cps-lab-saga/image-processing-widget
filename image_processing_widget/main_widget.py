@@ -59,7 +59,11 @@ class MainWidget(QtWidgets.QMainWindow):
         self.main_layout.addWidget(self.img_widget)
 
         self.process_thread = QtCore.QThread()
-        self.process_worker = None
+        self.process_worker = ProcessWorker(self.dock)
+        self.process_worker.moveToThread(self.process_thread)
+        self.process_worker.finished.connect(self.finished_process_image)
+        self.process_thread.started.connect(self.process_worker.run)
+        self.process_thread.start()
 
         self.connect_ui()
 
@@ -114,28 +118,18 @@ class MainWidget(QtWidgets.QMainWindow):
             self.save_as_button_clicked
         )
 
-    def setup_start_process_worker(self, image):
-        self.process_worker = ProcessWorker(self.process_img, image)
-        self.process_worker.moveToThread(self.process_thread)
-        self.process_thread.started.connect(self.process_worker.run)
-        self.process_worker.finished.connect(self.finished_process_image)
-
     def finished_process_image(self, processed_image):
-        self.process_thread.exit()
         self.processed_img = processed_image
         self.setCursor(QtCore.Qt.ArrowCursor)
         self.show_processed_image()
 
     def start_process_image(self):
         if self.img_path:
-            self.setup_start_process_worker(self.original_img)
-            self.process_thread.start()
+            q = self.process_worker.queue
+            with q.mutex:
+                q.queue.clear()
+            q.put(self.original_img)
             self.setCursor(QtCore.Qt.BusyCursor)
-
-    def process_img(self, img):
-        process_widget = self.dock.process_groupbox.stacked_layout.currentWidget()
-        oriented_image = self.dock.orient_groupbox.orient_img(img)
-        return process_widget.process_img(oriented_image)
 
     def peek_original_img(self):
         oriented_image = self.dock.orient_groupbox.orient_img(self.original_img)
