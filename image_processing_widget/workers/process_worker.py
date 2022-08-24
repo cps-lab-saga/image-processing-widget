@@ -19,6 +19,9 @@ class ProcessWorker(QtCore.QObject):
             self.finished.emit(processed_image)
 
     def process_img(self, img):
-        process_widget = self.dock.process_groupbox.stacked_layout.currentWidget()
-        oriented_image = self.dock.orient_groupbox.orient_img(img)
-        return process_widget.process_img(oriented_image)
+        try:
+            process_widget = self.dock.process_groupbox.stacked_layout.currentWidget()
+            oriented_image = self.dock.orient_groupbox.orient_img(img)
+            return process_widget.process_img(oriented_image)
+        except Exception as e:
+            return e

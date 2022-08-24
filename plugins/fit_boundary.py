@@ -22,6 +22,9 @@ class FitBoundary(ProcessPlugin):
         pass
 
     def process_img(self, img):
+        if img.ndim > 2:
+            raise Exception("Only accepts 8-bit binary source image")
+
         img_binary = (img > 0).astype(np.uint8)
         points = cv.findNonZero(img_binary).squeeze()
         boundary = self.boundary.currentText()

@@ -178,19 +178,6 @@ class MainWidget(QtWidgets.QMainWindow):
         self.plugins[plugin_info.name] = plugin_info.plugin_object
         logging.info(f"Added plugin: {plugin_info.name}.")
 
-        # plugin_info.plugin_object.add_visual.connect(self.display3d_widget.view.add)
-        # if plugin_info.plugin_object.dock is not None:
-        #     self.plugin_docks[plugin_info.name] = plugin_info.plugin_object.dock
-        #     self.addDockWidget(
-        #         QtCore.Qt.LeftDockWidgetArea,
-        #         self.plugin_docks[plugin_info.name],
-        #     )
-        # plugin_info.plugin_object.init(
-        #     self.config_parser, self.plugins, self.error_dialog
-        # )
-        # self.plugins[plugin_info.name] = plugin_info.plugin_object
-        # logging.info(f"Added plugin: {plugin_info.name}.")
-
     def connect_ui(self):
         self.dock.connect_ui(self.start_process_image)
         self.dock.peek_groupbox.peek_button.pressed.connect(self.peek_original_img)
@@ -201,9 +188,13 @@ class MainWidget(QtWidgets.QMainWindow):
         )
 
     def finished_process_image(self, processed_image):
+        if type(processed_image) == Exception:
+            self.error_dialog(str(processed_image))
+            self.setCursor(QtCore.Qt.ArrowCursor)
+            return
         self.processed_img = processed_image
-        self.setCursor(QtCore.Qt.ArrowCursor)
         self.show_processed_image()
+        self.setCursor(QtCore.Qt.ArrowCursor)
 
     def start_process_image(self):
         if self.img_path:

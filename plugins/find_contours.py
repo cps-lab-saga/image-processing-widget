@@ -28,6 +28,9 @@ class FindContours(ProcessPlugin):
         pass
 
     def process_img(self, img):
+        if img.ndim > 2:
+            raise Exception("Only accepts 8-bit binary source image")
+
         retrieval_mode = enum_contour_retrieval_modes[self.retrieval_mode.currentText()]
 
         approx_mode = enum_contour_approx_modes[self.approx_mode.currentText()]

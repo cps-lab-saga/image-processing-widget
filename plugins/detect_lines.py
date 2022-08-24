@@ -99,6 +99,9 @@ class DetectLines(ProcessPlugin):
             self.max_gap_control.setEnabled(True)
 
     def process_img(self, img):
+        if img.ndim > 2:
+            raise Exception("Only accepts 8-bit binary source image")
+
         rho = self.rho_control.value()
         theta = np.radians(self.theta_control.value())
         threshold = round(self.threshold_control.value())

@@ -61,6 +61,9 @@ class DetectCircles(ProcessPlugin):
         self.max_r_control.setRange(0, round(lim * 0.8))
 
     def process_img(self, img):
+        if img.ndim > 2:
+            raise Exception("Only accepts 8-bit binary source image")
+
         dp = self.dp_control.value()
         min_dist = self.min_dist_control.value()
         param1 = self.param1_control.value()
