@@ -1,11 +1,15 @@
 import contextlib
 
+import cv2 as cv
 import pyqtgraph as pg
 
-from image_processing_widget.defs import QtCore, QtWidgets, DisplayMode
+from image_processing_widget.defs import QtCore, QtWidgets, Signal, DisplayMode
 
 
 class ImageWidget(QtWidgets.QWidget):
+    show_histogram = Signal(bool)
+    histogram_updated = Signal(object)
+
     def __init__(self):
         super().__init__()
 
@@ -21,7 +25,10 @@ class ImageWidget(QtWidgets.QWidget):
         )
 
         self.show_crosshairs = False
+        self.show_roi = False
         self.crosshair_pen = pg.mkPen(color=(23, 190, 207), width=1)
+        self.roi_pen = pg.mkPen(color=(44, 160, 44), width=2)
+        self.roi_hover_pen = pg.mkPen(color=(188, 189, 34), width=2)
 
         self.main_layout = QtWidgets.QVBoxLayout(self)
         self.setLayout(self.main_layout)
@@ -59,14 +66,27 @@ class ImageWidget(QtWidgets.QWidget):
         self.plot_widget.sigRangeChanged.connect(self.range_changed)
         self.plot_widget.scene().sigMouseClicked.connect(self.mouse_double_clicked)
 
+        self.roi = pg.ROI(
+            (0, 0),
+            size=(20, 20),
+            pen=self.roi_pen,
+            hoverPen=self.roi_hover_pen,
+            movable=True,
+            resizable=True,
+            rotatable=False,
+            rotateSnap=False,
+            scaleSnap=True,
+        )
+
+        self.roi.sigRegionChanged.connect(self.roi_moved)
+
     def setImage(self, img):
         self.img = img
         if self.display_mode == DisplayMode.AUTO:
             self.im_item.setImage(img)
-        elif self.display_mode == DisplayMode.BIT12:
-            self.im_item.setImage(img, levels=(0, 2**12 - 1))
-        elif self.display_mode == DisplayMode.BIT16:
-            self.im_item.setImage(img, levels=(0, 2**16 - 1))
+        elif self.display_mode == DisplayMode.BIT8:
+            self.im_item.setImage(img, levels=(0, 2**8))
+        self.range_changed()
 
     def mouse_moved(self, pos):
         """
@@ -94,7 +114,10 @@ class ImageWidget(QtWidgets.QWidget):
         """
         Double click right mouse button to toggle crosshairs
         """
-        if evt.double() and evt.button() == QtCore.Qt.RightButton:
+        if not evt.double() or self.img is None:
+            return
+
+        if evt.button() == QtCore.Qt.RightButton:
             if self.show_crosshairs:
                 self.show_crosshairs = False
                 self.fig.removeItem(self.v_crosshair)
@@ -111,6 +134,27 @@ class ImageWidget(QtWidgets.QWidget):
                 self.fig.addItem(self.intensity_crosshair_label, ignoreBounds=True)
                 self.mouse_moved(evt.scenePos())
 
+        elif evt.button() == QtCore.Qt.LeftButton:
+            if self.show_roi:
+                self.show_roi = False
+                self.fig.removeItem(self.roi)
+            else:
+                mouse_point = self.fig.vb.mapSceneToView(evt.scenePos())
+                x = round(mouse_point.x())
+                y = round(mouse_point.y())
+                wx = int(self.img.shape[1] * 0.1)
+                wy = int(self.img.shape[0] * 0.1)
+
+                self.roi.setPos((x - wx / 2, y - wy / 2))
+                self.roi.setSize((wx, wy))
+                self.roi.setAngle(0)
+
+                self.show_roi = True
+                self.fig.addItem(self.roi)
+                self.mouse_moved(evt.scenePos())
+
+            self.show_histogram.emit(self.show_roi)
+
     def range_changed(self):
         """
         Move crosshair labels if resized.
@@ -120,6 +164,74 @@ class ImageWidget(QtWidgets.QWidget):
             self.v_crosshair_label.setPos(self.v_crosshair_label.pos().x(), ylim[1])
             self.h_crosshair_label.setPos(xlim[0], self.h_crosshair_label.pos().y())
             self.intensity_crosshair_label.setPos(xlim[1], ylim[0])
+
+        if self.show_roi:
+            self.roi_moved()
+
+    def roi_moved(self):
+        """
+        keep roi inside image and as int.
+        """
+        if self.img is None:
+            return
+
+        x, y, wx, wy = self.get_roi_rect()
+        img_wy, img_wx = self.img.shape[:2]
+
+        if wx > img_wx:
+            wx = img_wx
+        if wy > img_wy:
+            wy = img_wy
+
+        if x < 0:
+            x = 0
+        elif x + wx >= img_wx:
+            x = img_wx - wx - 1
+        if y < 0:
+            y = 0
+        elif y + wy >= img_wy:
+            y = img_wy - wy - 1
+
+        self.roi.blockSignals(True)
+        self.roi.setPos((x, y))
+        self.roi.setSize((wx, wy))
+        self.roi.blockSignals(False)
+
+        histr = self.calculate_histogram()
+        self.histogram_updated.emit(histr)
+
+    def get_roi_rect(self):
+        x, y = [round(c) for c in self.roi.pos()]
+        wx, wy = [round(c) for c in self.roi.size()]
+        return x, y, wx, wy
+
+    def calculate_histogram(self):
+        x, y, wx, wy = self.get_roi_rect()
+
+        if self.img.ndim == 3:
+            img = self.img[y : y + wy, x : x + wx, :]
+            histr = {
+                color: cv.calcHist(
+                    images=[img],
+                    channels=[i],
+                    mask=None,
+                    histSize=[2**8],
+                    ranges=[0, 2**8],
+                ).flat
+                for i, color in enumerate(("r", "g", "b"))
+            }
+            return histr
+
+        elif self.img.ndim == 2:
+            img = self.img[y : y + wy, x : x + wx]
+            histr = cv.calcHist(
+                images=[img],
+                channels=[0],
+                mask=None,
+                histSize=[2**8],
+                ranges=[0, 2**8],
+            ).flat
+            return histr
 
 
 if __name__ == "__main__":

@@ -18,7 +18,7 @@ from image_processing_widget.defs import (
     ReadMode,
 )
 from image_processing_widget.display_widget.image_widget import ImageWidget
-from image_processing_widget.dock import Dock
+from image_processing_widget.docks import ControlsDock, HistogramDock
 from image_processing_widget.funcs import check_file_type, imread, imwrite
 from image_processing_widget.plugin_objects import ProcessPlugin
 from image_processing_widget.workers import ProcessWorker
@@ -53,12 +53,21 @@ class MainWidget(QtWidgets.QMainWindow):
         self.setCentralWidget(self.main_widget)
         self.main_layout = QtWidgets.QHBoxLayout(self.main_widget)
 
+        self.setCorner(QtCore.Qt.TopLeftCorner, QtCore.Qt.LeftDockWidgetArea)
+        self.setCorner(QtCore.Qt.BottomLeftCorner, QtCore.Qt.LeftDockWidgetArea)
+        self.setCorner(QtCore.Qt.TopRightCorner, QtCore.Qt.RightDockWidgetArea)
+        self.setCorner(QtCore.Qt.BottomRightCorner, QtCore.Qt.RightDockWidgetArea)
+
         self.img_path = None
         self.original_img = None
         self.processed_img = None
 
-        self.dock = Dock()
-        self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.dock)
+        self.controls_dock = ControlsDock()
+        self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.controls_dock)
+
+        self.histogram_dock = HistogramDock()
+        self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.histogram_dock)
+        self.histogram_dock.setFloating(True)
 
         self.plugins = {}
         self.plugin_manager = PluginManager(
@@ -70,9 +79,11 @@ class MainWidget(QtWidgets.QMainWindow):
 
         self.img_widget = ImageWidget()
         self.main_layout.addWidget(self.img_widget)
+        self.img_widget.show_histogram.connect(self.histogram_dock.show_hide_dock)
+        self.img_widget.histogram_updated.connect(self.histogram_dock.set_data)
 
         self.process_thread = QtCore.QThread()
-        self.process_worker = ProcessWorker(self.dock)
+        self.process_worker = ProcessWorker(self.controls_dock)
         self.process_worker.moveToThread(self.process_thread)
         self.process_worker.finished.connect(self.finished_process_image)
         self.process_thread.started.connect(self.process_worker.run)
@@ -172,18 +183,24 @@ class MainWidget(QtWidgets.QMainWindow):
                 self.activate_plugin(plugin_info)
 
     def activate_plugin(self, plugin_info):
-        self.dock.process_groupbox.add_process(
+        self.controls_dock.process_groupbox.add_process(
             plugin_info.name, plugin_info.plugin_object
         )
         self.plugins[plugin_info.name] = plugin_info.plugin_object
         logging.info(f"Added plugin: {plugin_info.name}.")
 
     def connect_ui(self):
-        self.dock.connect_ui(self.start_process_image)
-        self.dock.peek_groupbox.peek_button.pressed.connect(self.peek_original_img)
-        self.dock.peek_groupbox.peek_button.released.connect(self.show_processed_image)
-        self.dock.save_groupbox.save_button.clicked.connect(self.save_button_clicked)
-        self.dock.save_groupbox.save_as_button.clicked.connect(
+        self.controls_dock.connect_ui(self.start_process_image)
+        self.controls_dock.peek_groupbox.peek_button.pressed.connect(
+            self.peek_original_img
+        )
+        self.controls_dock.peek_groupbox.peek_button.released.connect(
+            self.show_processed_image
+        )
+        self.controls_dock.save_groupbox.save_button.clicked.connect(
+            self.save_button_clicked
+        )
+        self.controls_dock.save_groupbox.save_as_button.clicked.connect(
             self.save_as_button_clicked
         )
 
@@ -205,7 +222,9 @@ class MainWidget(QtWidgets.QMainWindow):
             self.setCursor(QtCore.Qt.BusyCursor)
 
     def peek_original_img(self):
-        oriented_image = self.dock.orient_groupbox.orient_img(self.original_img)
+        oriented_image = self.controls_dock.orient_groupbox.orient_img(
+            self.original_img
+        )
         self.img_widget.setImage(oriented_image)
 
     def show_processed_image(self):
@@ -220,7 +239,7 @@ class MainWidget(QtWidgets.QMainWindow):
             self.original_img = cv.cvtColor(self.original_img, cv.COLOR_BGR2RGB)
 
         self.start_process_image()
-        self.dock.process_groupbox.adjust_range(self.original_img.shape)
+        self.controls_dock.process_groupbox.adjust_range(self.original_img.shape)
 
     def dragEnterEvent(self, e):
         if e.mimeData().hasUrls():
@@ -251,7 +270,7 @@ class MainWidget(QtWidgets.QMainWindow):
             super().dropEvent(e)
 
     def gui_save(self, settings):
-        self.dock.gui_save(settings)
+        self.controls_dock.gui_save(settings)
         settings.setValue("Window/geometry", self.saveGeometry())
         settings.setValue("Window/state", self.saveState())
 
@@ -260,7 +279,7 @@ class MainWidget(QtWidgets.QMainWindow):
             self.restoreGeometry(geometry)
         if state := settings.value("Window/state"):
             self.restoreState(state)
-        self.dock.gui_restore(settings)
+        self.controls_dock.gui_restore(settings)
 
     def closeEvent(self, event):
         """save before closing"""

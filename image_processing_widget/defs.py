@@ -52,5 +52,4 @@ class ReadMode(Enum):
 
 class DisplayMode(Enum):
     AUTO = auto()
-    BIT12 = auto()
-    BIT16 = auto()
+    BIT8 = auto()

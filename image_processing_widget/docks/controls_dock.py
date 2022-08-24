@@ -1,5 +1,5 @@
-from image_processing_widget.defs import QtCore, QtWidgets
-
+from image_processing_widget.custom_components import BaseDock
+from image_processing_widget.defs import QtWidgets
 from image_processing_widget.groupboxes import (
     OrientGroupBox,
     PeekGroupBox,
@@ -8,21 +8,11 @@ from image_processing_widget.groupboxes import (
 )
 
 
-class Dock(QtWidgets.QDockWidget):
+class ControlsDock(BaseDock):
     def __init__(self):
         super().__init__()
 
-        self.dock_contents = QtWidgets.QFrame(self)
-        self.setWidget(self.dock_contents)
-        self.setTitleBarWidget(QtWidgets.QLabel(self))
-        self.setAllowedAreas(QtCore.Qt.AllDockWidgetAreas)
-        self.setFeatures(
-            self.DockWidgetFloatable | self.DockWidgetMovable | self.DockWidgetClosable
-        )
-
-        self.setObjectName("ImgProcessDock")
-
-        self.dock_layout = QtWidgets.QVBoxLayout(self.dock_contents)
+        self.setWindowTitle("Controls")
 
         self.process_groupbox = ProcessGroupBox(self.dock_contents)
         self.dock_layout.addWidget(self.process_groupbox)
@@ -54,7 +44,7 @@ class Dock(QtWidgets.QDockWidget):
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication([])
-    widget = Dock()
+    widget = ControlsDock()
     widget.show()
 
     app.exec()
