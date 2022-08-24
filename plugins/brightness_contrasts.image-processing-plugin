@@ -1,0 +1,8 @@
+[Core]
+Name = Brightness & Contrasts
+Module = brightness_contrasts
+
+[Documentation]
+Author = Wen Liang Yeoh
+Version = 0.1
+Description = Brightness Contrasts

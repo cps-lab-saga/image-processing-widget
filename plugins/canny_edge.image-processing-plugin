@@ -1,0 +1,8 @@
+[Core]
+Name = Canny Edge
+Module = canny_edge
+
+[Documentation]
+Author = Wen Liang Yeoh
+Version = 0.1
+Description = Canny Edge

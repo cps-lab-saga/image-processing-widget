@@ -3,13 +3,14 @@ import math
 import cv2 as cv
 import numpy as np
 
-from image_processing_widget.custom_components import ProcessBase, MySlider
+from image_processing_widget.custom_components import MySlider
 from image_processing_widget.defs import QtCore, QtWidgets
+from image_processing_widget.plugin_objects import ProcessPlugin
 
 
-class DetectLines(ProcessBase):
-    def __init__(self, parent=None):
-        super().__init__(parent=parent)
+class DetectLines(ProcessPlugin):
+    def __init__(self):
+        super().__init__()
 
         self.operation = QtWidgets.QComboBox(self)
         self.operation.addItems(["Standard Hough Lines", "Probabilistic Hough Lines"])

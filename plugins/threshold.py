@@ -1,13 +1,14 @@
 import cv2 as cv
 
-from image_processing_widget.custom_components import ProcessBase, MySlider
+from image_processing_widget.custom_components import MySlider
 from image_processing_widget.defs import QtCore, QtWidgets
 from image_processing_widget.funcs.cv_enums import enum_thresholds
+from image_processing_widget.plugin_objects import ProcessPlugin
 
 
-class Thresholds(ProcessBase):
-    def __init__(self, parent=None):
-        super().__init__(parent=parent)
+class Thresholds(ProcessPlugin):
+    def __init__(self):
+        super().__init__()
 
         self.thresh_type = QtWidgets.QComboBox(self)
         self.thresh_type.addItems(enum_thresholds.keys())

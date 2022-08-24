@@ -1,0 +1,8 @@
+[Core]
+Name = Find Contours
+Module = find_contours
+
+[Documentation]
+Author = Wen Liang Yeoh
+Version = 0.1
+Description = Find Contours

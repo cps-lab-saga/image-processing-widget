@@ -1,0 +1,8 @@
+[Core]
+Name = Morphological Transforms (Basic)
+Module = morph
+
+[Documentation]
+Author = Wen Liang Yeoh
+Version = 0.1
+Description = Morph

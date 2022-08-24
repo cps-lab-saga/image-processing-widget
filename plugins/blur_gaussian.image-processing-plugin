@@ -1,0 +1,8 @@
+[Core]
+Name = Blur (Gaussian)
+Module = blur_gaussian
+
+[Documentation]
+Author = Wen Liang Yeoh
+Version = 0.1
+Description = Blur Gaussian

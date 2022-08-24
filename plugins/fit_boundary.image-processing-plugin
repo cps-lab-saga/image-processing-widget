@@ -1,0 +1,8 @@
+[Core]
+Name = Fit Boundary
+Module = fit_boundary
+
+[Documentation]
+Author = Wen Liang Yeoh
+Version = 0.1
+Description = Fit Boundary

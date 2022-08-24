@@ -1,0 +1,8 @@
+[Core]
+Name = Gradients
+Module = gradients
+
+[Documentation]
+Author = Wen Liang Yeoh
+Version = 0.1
+Description = Gradients

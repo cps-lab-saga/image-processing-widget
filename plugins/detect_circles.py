@@ -1,13 +1,14 @@
 import cv2 as cv
 import numpy as np
 
-from image_processing_widget.custom_components import ProcessBase, MySlider
+from image_processing_widget.custom_components import MySlider
 from image_processing_widget.defs import QtCore, QtWidgets
+from image_processing_widget.plugin_objects import ProcessPlugin
 
 
-class DetectCircles(ProcessBase):
-    def __init__(self, parent=None):
-        super().__init__(parent=parent)
+class DetectCircles(ProcessPlugin):
+    def __init__(self):
+        super().__init__()
 
         self.dp_control = MySlider(decimals=2, orientation=QtCore.Qt.Horizontal)
         self.dp_control.setSingleStep(0.01)

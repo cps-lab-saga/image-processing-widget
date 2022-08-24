@@ -1,0 +1,8 @@
+[Core]
+Name = Bilateral Filtering
+Module = bilateral_filtering
+
+[Documentation]
+Author = Wen Liang Yeoh
+Version = 0.1
+Description = Bilateral Filtering

@@ -1,16 +1,16 @@
 import cv2 as cv
 
-from image_processing_widget.custom_components import ProcessBase
 from image_processing_widget.defs import QtWidgets
 from image_processing_widget.funcs.cv_enums import (
     enum_contour_retrieval_modes,
     enum_contour_approx_modes,
 )
+from image_processing_widget.plugin_objects import ProcessPlugin
 
 
-class FindContours(ProcessBase):
-    def __init__(self, parent=None):
-        super().__init__(parent=parent)
+class FindContours(ProcessPlugin):
+    def __init__(self):
+        super().__init__()
 
         self.retrieval_mode = QtWidgets.QComboBox(self)
         self.retrieval_mode.addItems(enum_contour_retrieval_modes.keys())

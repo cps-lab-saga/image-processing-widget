@@ -5,6 +5,7 @@ from pathlib import Path
 
 import cv2 as cv
 import qtawesome as qta
+from yapsy.PluginManager import PluginManager
 
 from image_processing_widget.custom_components import tab10_qcolor
 from image_processing_widget.defs import (
@@ -19,6 +20,7 @@ from image_processing_widget.defs import (
 from image_processing_widget.display_widget.image_widget import ImageWidget
 from image_processing_widget.dock import Dock
 from image_processing_widget.funcs import check_file_type, imread, imwrite
+from image_processing_widget.plugin_objects import ProcessPlugin
 from image_processing_widget.workers import ProcessWorker
 
 
@@ -41,8 +43,11 @@ class MainWidget(QtWidgets.QMainWindow):
             f"Looking for config file in {*[str(x) for x in self.project_paths],}."
         )
         self.config_parser = self.read_config()
-
         self.read_mode = self.get_read_mode(self.config_parser)
+
+        self.selected_plugins = self.get_plugins(self.config_parser)
+        logging.info(f"Plugins {self.selected_plugins} were selected.")
+        self.plugin_dirs = [x / "plugins" for x in self.project_paths]
 
         self.main_widget = QtWidgets.QWidget(self)
         self.setCentralWidget(self.main_widget)
@@ -54,6 +59,14 @@ class MainWidget(QtWidgets.QMainWindow):
 
         self.dock = Dock()
         self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.dock)
+
+        self.plugins = {}
+        self.plugin_manager = PluginManager(
+            categories_filter={"PluginObject": ProcessPlugin},
+            plugin_info_ext="image-processing-plugin",
+            directories_list=self.plugin_dirs,
+        )
+        self.setup_plugins(self.plugin_manager, self.selected_plugins)
 
         self.img_widget = ImageWidget()
         self.main_layout.addWidget(self.img_widget)
@@ -90,6 +103,17 @@ class MainWidget(QtWidgets.QMainWindow):
         return parser
 
     @staticmethod
+    def get_plugins(config_parser):
+        if config_parser.has_option("Plugins", "plugins"):
+            return [
+                x.strip()
+                for x in config_parser.get("Plugins", "plugins").split(",")
+                if x
+            ]
+        else:
+            return []
+
+    @staticmethod
     def get_read_mode(config_parser):
         if config_parser is None or not config_parser.has_option(
             "Image Config", "read_mode"
@@ -108,6 +132,64 @@ class MainWidget(QtWidgets.QMainWindow):
             logging.warning(f"Invalid read_mode: {read_mode}")
             logging.warning("Using default read_mode: COLOR")
             return ReadMode.COLOR
+
+    def setup_plugins(self, plugin_manager, selected_plugins):
+        plugin_manager.locatePlugins()
+        plugin_manager.loadPlugins()
+        available_plugins = {
+            plugin_info.name: plugin_info
+            for plugin_info in plugin_manager.getAllPlugins()
+        }
+
+        if missing_plugins := (set(selected_plugins) - set(available_plugins)):
+            msg = f"Selected plugins [{', '.join(missing_plugins)}] are not available"
+            self.error_dialog(msg)
+            logging.warning(msg)
+
+        for plugin_info in available_plugins.values():
+            if (
+                plugin_info.name in selected_plugins
+                and plugin_info.name not in self.plugins.keys()
+            ):
+                if "Dependencies" in plugin_info.details["Core"].keys():
+                    dependencies = [
+                        x.strip()
+                        for x in plugin_info.details["Core"]["Dependencies"].split(",")
+                    ]
+                    for plugin_name in dependencies:
+                        if plugin_name in self.plugins.keys():
+                            continue
+                        elif plugin_name in available_plugins:
+                            self.activate_plugin(available_plugins[plugin_name])
+                        else:
+                            self.error_dialog(
+                                f"Dependent plugin ({plugin_name}) not available"
+                            )
+                            logging.warning(
+                                f"Dependent plugin ({plugin_name}) not available."
+                            )
+
+                self.activate_plugin(plugin_info)
+
+    def activate_plugin(self, plugin_info):
+        self.dock.process_groupbox.add_process(
+            plugin_info.name, plugin_info.plugin_object
+        )
+        self.plugins[plugin_info.name] = plugin_info.plugin_object
+        logging.info(f"Added plugin: {plugin_info.name}.")
+
+        # plugin_info.plugin_object.add_visual.connect(self.display3d_widget.view.add)
+        # if plugin_info.plugin_object.dock is not None:
+        #     self.plugin_docks[plugin_info.name] = plugin_info.plugin_object.dock
+        #     self.addDockWidget(
+        #         QtCore.Qt.LeftDockWidgetArea,
+        #         self.plugin_docks[plugin_info.name],
+        #     )
+        # plugin_info.plugin_object.init(
+        #     self.config_parser, self.plugins, self.error_dialog
+        # )
+        # self.plugins[plugin_info.name] = plugin_info.plugin_object
+        # logging.info(f"Added plugin: {plugin_info.name}.")
 
     def connect_ui(self):
         self.dock.connect_ui(self.start_process_image)

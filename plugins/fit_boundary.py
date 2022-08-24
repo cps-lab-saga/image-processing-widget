@@ -1,13 +1,13 @@
 import cv2 as cv
 import numpy as np
 
-from image_processing_widget.custom_components import ProcessBase
 from image_processing_widget.defs import QtWidgets
+from image_processing_widget.plugin_objects import ProcessPlugin
 
 
-class FitBoundary(ProcessBase):
-    def __init__(self, parent=None):
-        super().__init__(parent=parent)
+class FitBoundary(ProcessPlugin):
+    def __init__(self):
+        super().__init__()
 
         self.boundary = QtWidgets.QComboBox(self)
         self.boundary.addItems(

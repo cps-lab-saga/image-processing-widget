@@ -1,0 +1,8 @@
+[Core]
+Name = Blur
+Module = blur
+
+[Documentation]
+Author = Wen Liang Yeoh
+Version = 0.1
+Description = Blur

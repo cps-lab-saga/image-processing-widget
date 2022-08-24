@@ -1,13 +1,14 @@
 import cv2 as cv
 
-from image_processing_widget.custom_components import ProcessBase, MySlider
+from image_processing_widget.custom_components import MySlider
 from image_processing_widget.defs import QtCore, QtWidgets
 from image_processing_widget.funcs.cv_enums import enum_border_types
+from image_processing_widget.plugin_objects import ProcessPlugin
 
 
-class GaussianBlur(ProcessBase):
-    def __init__(self, parent=None):
-        super().__init__(parent=parent)
+class GaussianBlur(ProcessPlugin):
+    def __init__(self):
+        super().__init__()
 
         self.x_control = MySlider(decimals=0, orientation=QtCore.Qt.Horizontal)
         self.x_control.setSingleStep(1)

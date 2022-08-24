@@ -1,18 +1,5 @@
 from image_processing_widget.custom_components.gui_save_base import BaseGuiSave
 from image_processing_widget.defs import QtWidgets, Signal
-from image_processing_widget.process_widgets import (
-    BrightnessContrasts,
-    MorphEx,
-    Blur,
-    Gradients,
-    Thresholds,
-    InRange,
-    Canny,
-    DetectLines,
-    DetectCircles,
-    FindContours,
-    FitBoundary,
-)
 
 
 class ProcessGroupBox(QtWidgets.QGroupBox, BaseGuiSave):
@@ -35,18 +22,6 @@ class ProcessGroupBox(QtWidgets.QGroupBox, BaseGuiSave):
 
         self.stacked_layout = QtWidgets.QStackedLayout()
         main_layout.addLayout(self.stacked_layout)
-
-        self.add_process("Brightness & Contrasts", BrightnessContrasts(self))
-        self.add_process("Blur", Blur(self))
-        self.add_process("MorphEx", MorphEx(self))
-        self.add_process("Gradients", Gradients(self))
-        self.add_process("Thresholds", Thresholds(self))
-        self.add_process("InRange", InRange(self))
-        self.add_process("Canny Edge Detection", Canny(self))
-        self.add_process("Detect Lines", DetectLines(self))
-        self.add_process("Detect Circles", DetectCircles(self))
-        self.add_process("Find Contours", FindContours(self))
-        self.add_process("Fit Boundary", FitBoundary(self))
 
     def switch_page(self):
         self.stacked_layout.setCurrentIndex(self.page_combo.currentIndex())

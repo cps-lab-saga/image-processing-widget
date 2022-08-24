@@ -1,0 +1,8 @@
+[Core]
+Name = Detect Circles
+Module = detect_circles
+
+[Documentation]
+Author = Wen Liang Yeoh
+Version = 0.1
+Description = Detect Circles

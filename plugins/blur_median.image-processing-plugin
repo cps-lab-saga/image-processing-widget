@@ -1,0 +1,8 @@
+[Core]
+Name = Blur (Median)
+Module = blur_median
+
+[Documentation]
+Author = Wen Liang Yeoh
+Version = 0.1
+Description = Blur Median
