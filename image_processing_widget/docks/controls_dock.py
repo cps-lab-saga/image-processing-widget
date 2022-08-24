@@ -13,6 +13,7 @@ class ControlsDock(BaseDock):
         super().__init__()
 
         self.setWindowTitle("Controls")
+        self.setFeatures(self.DockWidgetFloatable | self.DockWidgetMovable)
 
         self.process_groupbox = ProcessGroupBox(self.dock_contents)
         self.dock_layout.addWidget(self.process_groupbox)

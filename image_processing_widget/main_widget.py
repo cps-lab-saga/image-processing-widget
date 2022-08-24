@@ -66,8 +66,7 @@ class MainWidget(QtWidgets.QMainWindow):
         self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.controls_dock)
 
         self.histogram_dock = HistogramDock()
-        self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.histogram_dock)
-        self.histogram_dock.setFloating(True)
+        self.addDockWidget(QtCore.Qt.BottomDockWidgetArea, self.histogram_dock)
 
         self.plugins = {}
         self.plugin_manager = PluginManager(
@@ -98,6 +97,7 @@ class MainWidget(QtWidgets.QMainWindow):
                 str(self.settings_file), QtCore.QSettings.IniFormat
             )
             self.gui_restore(settings)
+            logging.info(f"Restoring GUI from {str(self.settings_file)}.")
 
         self.img_widget.setFocus()
 
@@ -275,11 +275,15 @@ class MainWidget(QtWidgets.QMainWindow):
         settings.setValue("Window/state", self.saveState())
 
     def gui_restore(self, settings):
-        if geometry := settings.value("Window/geometry"):
-            self.restoreGeometry(geometry)
-        if state := settings.value("Window/state"):
-            self.restoreState(state)
-        self.controls_dock.gui_restore(settings)
+        try:
+            if geometry := settings.value("Window/geometry"):
+                self.restoreGeometry(geometry)
+            if state := settings.value("Window/state"):
+                self.restoreState(state)
+            self.controls_dock.gui_restore(settings)
+        except Exception as e:
+            self.error_dialog(f"{self.settings_file} is corrupted!\n{str(e)}")
+            print(f"{self.settings_file} is corrupted!")
 
     def closeEvent(self, event):
         """save before closing"""
