@@ -68,6 +68,11 @@ class MainWidget(QtWidgets.QMainWindow):
         self.histogram_dock = HistogramDock()
         self.addDockWidget(QtCore.Qt.BottomDockWidgetArea, self.histogram_dock)
 
+        self.img_widget = ImageWidget(self.config_parser)
+        self.main_layout.addWidget(self.img_widget)
+        self.img_widget.show_histogram.connect(self.histogram_dock.show_hide_dock)
+        self.img_widget.histogram_updated.connect(self.histogram_dock.set_data)
+
         self.plugins = {}
         self.plugin_manager = PluginManager(
             categories_filter={"PluginObject": ProcessPlugin},
@@ -75,11 +80,6 @@ class MainWidget(QtWidgets.QMainWindow):
             directories_list=self.plugin_dirs,
         )
         self.setup_plugins(self.plugin_manager, self.selected_plugins)
-
-        self.img_widget = ImageWidget()
-        self.main_layout.addWidget(self.img_widget)
-        self.img_widget.show_histogram.connect(self.histogram_dock.show_hide_dock)
-        self.img_widget.histogram_updated.connect(self.histogram_dock.set_data)
 
         self.process_thread = QtCore.QThread()
         self.process_worker = ProcessWorker(self.controls_dock)
@@ -134,10 +134,10 @@ class MainWidget(QtWidgets.QMainWindow):
 
         read_mode = config_parser.get("Image Config", "read_mode").strip()
         if read_mode.upper() == "COLOR":
-            logging.info(f"Read_mode: {read_mode}")
+            logging.info(f"read_mode: {read_mode}")
             return ReadMode.COLOR
         elif read_mode.upper() == "GRAYSCALE":
-            logging.info(f"Read_mode: {read_mode}")
+            logging.info(f"read_mode: {read_mode}")
             return ReadMode.GRAYSCALE
         else:
             logging.warning(f"Invalid read_mode: {read_mode}")

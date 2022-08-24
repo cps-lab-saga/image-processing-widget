@@ -1,4 +1,5 @@
 import contextlib
+import logging
 
 import cv2 as cv
 import pyqtgraph as pg
@@ -10,13 +11,15 @@ class ImageWidget(QtWidgets.QWidget):
     show_histogram = Signal(bool)
     histogram_updated = Signal(object)
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, config_parser=None, parent=None):
+        super().__init__(parent=parent)
 
         self.img = None
 
         self.setToolTip("Drop images here.")
         self.display_mode = DisplayMode.AUTO
+
+        self.config = self.get_image_config(config_parser)
 
         pg.setConfigOptions(
             background=None,
@@ -232,6 +235,25 @@ class ImageWidget(QtWidgets.QWidget):
                 ranges=[0, 2**8],
             ).flat
             return histr
+
+    @staticmethod
+    def get_image_config(config_parser):
+        config = {"display_mode": DisplayMode.AUTO}
+        if config_parser is None:
+            return config
+
+        if config_parser.has_option("Image Config", "display_mode"):
+            display_mode = config_parser.get("Image Config", "display_mode").strip()
+            if display_mode.upper() == "AUTO":
+                logging.info(f"display_mode: {display_mode}")
+                config["display_mode"] = DisplayMode.AUTO
+            elif display_mode.upper() in ["8BIT", "8-BIT"]:
+                logging.info(f"display_mode: {display_mode}")
+                config["display_mode"] = DisplayMode.BIT8
+            else:
+                logging.warning(f"Invalid display_mode: {display_mode}")
+
+        return DisplayMode.AUTO
 
 
 if __name__ == "__main__":
