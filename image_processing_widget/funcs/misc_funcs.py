@@ -29,6 +29,8 @@ def imread(filename: Path, flags):
 
 
 def imwrite(filename: Path, img):
+    if img.ndim > 2:
+        img = cv.cvtColor(img, cv.COLOR_BGR2RGB)
     retval, buf = cv.imencode(ext=filename.suffix, img=img)
     if retval:
         buf.tofile(str(filename))

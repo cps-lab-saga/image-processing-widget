@@ -1,6 +1,6 @@
 # A Grayscale Image Processing Widget
 
-GUI to explore OpenCV grayscale image processing functions.
+GUI to explore OpenCV image processing functions.
 
 ## Installation
 
@@ -10,7 +10,7 @@ GUI to explore OpenCV grayscale image processing functions.
 2. From wheel
     - Download latest wheel file from releases.
     - Install wheel `pip install <package-name>.whl`
-    - Run widget `grayscale_image_processing`
+    - Run widget `image_processing`
 
 ## Usage
 
