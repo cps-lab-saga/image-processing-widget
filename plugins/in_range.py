@@ -21,9 +21,8 @@ class InRange(ProcessPlugin):
         self.upper_control.valueChanged.connect(self.keep_range)
         self.form_layout.addRow("Upper:", self.upper_control)
 
-    def connect_ui(self, update_func):
-        self.lower_control.valueChanged.connect(update_func)
-        self.upper_control.valueChanged.connect(update_func)
+        self.lower_control.valueChanged.connect(lambda _: self.settings_updated.emit())
+        self.upper_control.valueChanged.connect(lambda _: self.settings_updated.emit())
 
     def adjust_range(self, shape):
         pass

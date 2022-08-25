@@ -3,11 +3,11 @@ from itertools import cycle
 import cv2 as cv
 import qtawesome as qta
 
-from image_processing_widget.custom_components.badge_button import BadgeButton
-from image_processing_widget.custom_components.gui_save_base import (
+from image_processing_widget.custom_components import (
+    BadgeButton,
     BaseGuiSave,
+    tab10_qcolor,
 )
-from image_processing_widget.custom_components.my_colors import tab10_qcolor
 from image_processing_widget.defs import QtCore, QtWidgets, Signal
 
 
@@ -21,18 +21,20 @@ class OrientGroupBox(QtWidgets.QGroupBox, BaseGuiSave):
         self.save_heading = self.__class__.__name__
 
         self.setTitle("Orientation")
-        main_layout = QtWidgets.QHBoxLayout(self)
+        self.main_layout = QtWidgets.QHBoxLayout(self)
 
         self.rot_cycle = cycle(["0", "90", "180", "270"])
         self.flip_cycle = cycle(["no_flip", "h_flip", "v_flip", "hv_flip"])
         self.rotation = next(self.rot_cycle)
         self.flip = next(self.flip_cycle)
 
-        main_layout.addStretch()
+        self.main_layout.addStretch()
 
-        icon_size = 30
-        badge_size = 8
-        rotate_button = BadgeButton(badge_size, tab10_qcolor["red"], "white", self)
+        self.icon_size = 30
+        self.badge_size = 8
+        self.rotate_button = BadgeButton(
+            self.badge_size, tab10_qcolor["red"], "white", self
+        )
         self.rotate_icons = {
             "0": qta.icon("mdi.rotate-right", rotated=0),
             "90": qta.icon("mdi.rotate-right", rotated=90),
@@ -45,26 +47,27 @@ class OrientGroupBox(QtWidgets.QGroupBox, BaseGuiSave):
             "180": "Rotated by 180 degrees.",
             "270": "Rotated by 270 degrees.",
         }
-        rotate_button.setIcon(self.rotate_icons[self.rotation])
-        rotate_button.setToolTip(self.rotate_tooltips[self.rotation])
-        rotate_button.setIconSize(QtCore.QSize(icon_size, icon_size))
-        rotate_button.setFlat(True)
-        rotate_button.setNoBadge()
-        main_layout.addWidget(rotate_button)
-        self.rotate_button = rotate_button
-        rotate_button.clicked.connect(self.rotate_button_clicked)
+        self.rotate_button.setIcon(self.rotate_icons[self.rotation])
+        self.rotate_button.setToolTip(self.rotate_tooltips[self.rotation])
+        self.rotate_button.setIconSize(QtCore.QSize(self.icon_size, self.icon_size))
+        self.rotate_button.setFlat(True)
+        self.rotate_button.set_no_badge()
+        self.main_layout.addWidget(self.rotate_button)
+        self.rotate_button.clicked.connect(self.rotate_button_clicked)
 
-        main_layout.addStretch()
+        self.main_layout.addStretch()
 
-        arrow_label = QtWidgets.QLabel(self)
-        arrow_label.setPixmap(
-            qta.icon("mdi.arrow-right", color="gray").pixmap(icon_size)
+        self.arrow_label = QtWidgets.QLabel(self)
+        self.arrow_label.setPixmap(
+            qta.icon("mdi.arrow-right", color="gray").pixmap(self.icon_size)
         )
-        main_layout.addWidget(arrow_label)
+        self.main_layout.addWidget(self.arrow_label)
 
-        main_layout.addStretch()
+        self.main_layout.addStretch()
 
-        flip_button = BadgeButton(badge_size, tab10_qcolor["blue"], "white", self)
+        self.flip_button = BadgeButton(
+            self.badge_size, tab10_qcolor["blue"], "white", self
+        )
         self.flip_icons = {
             "no_flip": qta.icon("mdi.card-outline"),
             "h_flip": qta.icon("mdi.reflect-horizontal"),
@@ -85,40 +88,41 @@ class OrientGroupBox(QtWidgets.QGroupBox, BaseGuiSave):
             "hv_flip": "Flipped horizontally and vertically.",
         }
 
-        flip_button.setIcon(self.flip_icons[self.flip])
-        flip_button.setToolTip(self.flip_tooltips[self.flip])
-        flip_button.setIconSize(QtCore.QSize(icon_size, icon_size))
-        flip_button.setFlat(True)
-        flip_button.setNoBadge()
-        main_layout.addWidget(flip_button)
-        self.flip_button = flip_button
-        flip_button.clicked.connect(self.flip_button_clicked)
+        self.flip_button.setIcon(self.flip_icons[self.flip])
+        self.flip_button.setToolTip(self.flip_tooltips[self.flip])
+        self.flip_button.setIconSize(QtCore.QSize(self.icon_size, self.icon_size))
+        self.flip_button.setFlat(True)
+        self.flip_button.set_no_badge()
+        self.main_layout.addWidget(self.flip_button)
+        self.flip_button.clicked.connect(self.flip_button_clicked)
 
-        main_layout.addStretch()
+        self.main_layout.addStretch()
 
     def rotate_button_clicked(self):
         self.rotation = next(self.rot_cycle)
         self.update_rotate_button()
+        self.settings_updated.emit()
 
     def update_rotate_button(self):
         self.rotate_button.setIcon(self.rotate_icons[self.rotation])
         self.rotate_button.setToolTip(self.rotate_tooltips[self.rotation])
         if self.rotation == "0":
-            self.rotate_button.setNoBadge()
+            self.rotate_button.set_no_badge()
         else:
-            self.rotate_button.setBadge(self.rotation)
+            self.rotate_button.set_badge(self.rotation)
 
     def flip_button_clicked(self):
         self.flip = next(self.flip_cycle)
         self.update_flip_button()
+        self.settings_updated.emit()
 
     def update_flip_button(self):
         self.flip_button.setIcon(self.flip_icons[self.flip])
         self.flip_button.setToolTip(self.flip_tooltips[self.flip])
         if self.flip == "no_flip":
-            self.flip_button.setNoBadge()
+            self.flip_button.set_no_badge()
         else:
-            self.flip_button.setBadge("✱")
+            self.flip_button.set_badge("✱")
 
     def rotate_img(self, img):
         settings = self.rotation
@@ -144,10 +148,6 @@ class OrientGroupBox(QtWidgets.QGroupBox, BaseGuiSave):
 
     def orient_img(self, img):
         return self.flip_img(self.rotate_img(img))
-
-    def connect_ui(self, update_func):
-        self.flip_button.clicked.connect(update_func)
-        self.rotate_button.clicked.connect(update_func)
 
     def gui_save(self, settings):
         super().gui_save(settings)

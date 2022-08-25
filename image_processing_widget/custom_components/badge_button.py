@@ -20,7 +20,7 @@ class BadgeButton(QtWidgets.QWidget):
         for m in ["setIcon", "setIconSize", "setFlat", "clicked"]:
             setattr(self, m, getattr(self.button, m))
 
-    def setBadge(self, text):
+    def set_badge(self, text):
         self.badge.setPixmap(
             create_badge_pixmap(
                 text, self.badge_size, self.badge_color, self.badge_text_color
@@ -28,7 +28,7 @@ class BadgeButton(QtWidgets.QWidget):
         )
         self.badge.adjustSize()
 
-    def setNoBadge(self):
+    def set_no_badge(self):
         self.badge.setPixmap(
             create_badge_pixmap("", self.badge_size, "transparent", "transparent")
         )

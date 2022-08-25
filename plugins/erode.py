@@ -28,10 +28,15 @@ class Erode(ProcessPlugin):
         self.border_type.addItems(enum_border_types.keys())
         self.form_layout.addRow("Border Types:", self.border_type)
 
-    def connect_ui(self, update_func):
-        self.erosion_shape.currentTextChanged.connect(update_func)
-        self.erosion_size_control.valueChanged.connect(update_func)
-        self.border_type.currentTextChanged.connect(update_func)
+        self.erosion_shape.currentTextChanged.connect(
+            lambda _: self.settings_updated.emit()
+        )
+        self.erosion_size_control.valueChanged.connect(
+            lambda _: self.settings_updated.emit()
+        )
+        self.border_type.currentTextChanged.connect(
+            lambda _: self.settings_updated.emit()
+        )
 
     def process_img(self, img):
         erosion_shape = enum_morph_shapes[self.erosion_shape.currentText()]

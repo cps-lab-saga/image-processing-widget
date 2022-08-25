@@ -33,11 +33,16 @@ class BilateralFiltering(ProcessPlugin):
         self.border_type.addItems(enum_border_types.keys())
         self.form_layout.addRow("Border Types:", self.border_type)
 
-    def connect_ui(self, update_func):
-        self.d_control.valueChanged.connect(update_func)
-        self.sigma_color_control.valueChanged.connect(update_func)
-        self.sigma_space_control.valueChanged.connect(update_func)
-        self.border_type.currentTextChanged.connect(update_func)
+        self.d_control.valueChanged.connect(lambda _: self.settings_updated.emit())
+        self.sigma_color_control.valueChanged.connect(
+            lambda _: self.settings_updated.emit()
+        )
+        self.sigma_space_control.valueChanged.connect(
+            lambda _: self.settings_updated.emit()
+        )
+        self.border_type.currentTextChanged.connect(
+            lambda _: self.settings_updated.emit()
+        )
 
     def adjust_range(self, shape):
         lim = round((shape[0] + shape[1]) / 2 * 0.1)

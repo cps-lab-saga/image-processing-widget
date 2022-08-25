@@ -53,13 +53,20 @@ class Blur(ProcessPlugin):
 
         self.operations_changed(self.operation.currentText())
 
-    def connect_ui(self, update_func):
-        self.x_control.valueChanged.connect(update_func)
-        self.y_control.valueChanged.connect(update_func)
-        self.sigma_color_control.valueChanged.connect(update_func)
-        self.sigma_space_control.valueChanged.connect(update_func)
-        self.border_type.currentTextChanged.connect(update_func)
-        self.operation.currentTextChanged.connect(update_func)
+        self.x_control.valueChanged.connect(lambda _: self.settings_updated.emit())
+        self.y_control.valueChanged.connect(lambda _: self.settings_updated.emit())
+        self.sigma_color_control.valueChanged.connect(
+            lambda _: self.settings_updated.emit()
+        )
+        self.sigma_space_control.valueChanged.connect(
+            lambda _: self.settings_updated.emit()
+        )
+        self.border_type.currentTextChanged.connect(
+            lambda _: self.settings_updated.emit()
+        )
+        self.operation.currentTextChanged.connect(
+            lambda _: self.settings_updated.emit()
+        )
 
     def adjust_range(self, shape):
         lim = round((shape[0] + shape[1]) / 2 * 0.1)

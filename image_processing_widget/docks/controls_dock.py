@@ -1,5 +1,5 @@
 from image_processing_widget.custom_components import BaseDock
-from image_processing_widget.defs import QtWidgets
+from image_processing_widget.defs import QtWidgets, Signal
 from image_processing_widget.groupboxes import (
     OrientGroupBox,
     PeekGroupBox,
@@ -9,6 +9,12 @@ from image_processing_widget.groupboxes import (
 
 
 class ControlsDock(BaseDock):
+    settings_updated = Signal()
+    peek_started = Signal()
+    peek_ended = Signal()
+    save = Signal()
+    save_as = Signal()
+
     def __init__(self):
         super().__init__()
 
@@ -16,21 +22,22 @@ class ControlsDock(BaseDock):
         self.setFeatures(self.DockWidgetFloatable | self.DockWidgetMovable)
 
         self.process_groupbox = ProcessGroupBox(self.dock_contents)
+        self.process_groupbox.settings_updated.connect(self.settings_updated.emit)
         self.dock_layout.addWidget(self.process_groupbox)
 
         self.peek_groupbox = PeekGroupBox(self.dock_contents)
+        self.peek_groupbox.peek_started.connect(self.peek_started.emit)
+        self.peek_groupbox.peek_ended.connect(self.peek_ended.emit)
         self.dock_layout.addWidget(self.peek_groupbox)
 
         self.orient_groupbox = OrientGroupBox(self.dock_contents)
+        self.orient_groupbox.settings_updated.connect(self.settings_updated.emit)
         self.dock_layout.addWidget(self.orient_groupbox)
 
         self.save_groupbox = SaveGroupBox(self.dock_contents)
+        self.save_groupbox.save.connect(self.save.emit)
+        self.save_groupbox.save_as.connect(self.save_as.emit)
         self.dock_layout.addWidget(self.save_groupbox)
-
-    def connect_ui(self, update_func):
-        self.process_groupbox.stacked_layout.currentChanged.connect(update_func)
-        self.process_groupbox.connect_ui(update_func)
-        self.orient_groupbox.connect_ui(update_func)
 
     def gui_save(self, settings):
         self.process_groupbox.gui_save(settings)

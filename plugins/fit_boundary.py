@@ -15,8 +15,7 @@ class FitBoundary(ProcessPlugin):
         )
         self.form_layout.addRow("Find Boundary:", self.boundary)
 
-    def connect_ui(self, update_func):
-        self.boundary.currentTextChanged.connect(update_func)
+        self.boundary.currentTextChanged.connect(lambda _: self.settings_updated.emit())
 
     def adjust_range(self, shape):
         pass

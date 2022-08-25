@@ -63,6 +63,11 @@ class MainWidget(QtWidgets.QMainWindow):
         self.processed_img = None
 
         self.controls_dock = ControlsDock()
+        self.controls_dock.settings_updated.connect(self.start_process_image)
+        self.controls_dock.peek_started.connect(self.peek_original_img)
+        self.controls_dock.peek_ended.connect(self.show_processed_image)
+        self.controls_dock.save.connect(self.save_button_clicked)
+        self.controls_dock.save_as.connect(self.save_as_button_clicked)
         self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.controls_dock)
 
         self.histogram_dock = HistogramDock()
@@ -87,8 +92,6 @@ class MainWidget(QtWidgets.QMainWindow):
         self.process_worker.finished.connect(self.finished_process_image)
         self.process_thread.started.connect(self.process_worker.run)
         self.process_thread.start()
-
-        self.connect_ui()
 
         # load settings from previous session
         self.settings_file = settings_file()
@@ -183,26 +186,11 @@ class MainWidget(QtWidgets.QMainWindow):
                 self.activate_plugin(plugin_info)
 
     def activate_plugin(self, plugin_info):
-        self.controls_dock.process_groupbox.add_process(
+        self.controls_dock.process_groupbox.add_process_plugin(
             plugin_info.name, plugin_info.plugin_object
         )
         self.plugins[plugin_info.name] = plugin_info.plugin_object
         logging.info(f"Added plugin: {plugin_info.name}.")
-
-    def connect_ui(self):
-        self.controls_dock.connect_ui(self.start_process_image)
-        self.controls_dock.peek_groupbox.peek_button.pressed.connect(
-            self.peek_original_img
-        )
-        self.controls_dock.peek_groupbox.peek_button.released.connect(
-            self.show_processed_image
-        )
-        self.controls_dock.save_groupbox.save_button.clicked.connect(
-            self.save_button_clicked
-        )
-        self.controls_dock.save_groupbox.save_as_button.clicked.connect(
-            self.save_as_button_clicked
-        )
 
     def finished_process_image(self, processed_image):
         if type(processed_image) == Exception:
@@ -214,7 +202,7 @@ class MainWidget(QtWidgets.QMainWindow):
         self.setCursor(QtCore.Qt.ArrowCursor)
 
     def start_process_image(self):
-        if self.img_path:
+        if self.original_img is not None:
             q = self.process_worker.queue
             with q.mutex:
                 q.queue.clear()
@@ -225,10 +213,10 @@ class MainWidget(QtWidgets.QMainWindow):
         oriented_image = self.controls_dock.orient_groupbox.orient_img(
             self.original_img
         )
-        self.img_widget.setImage(oriented_image)
+        self.img_widget.set_image(oriented_image)
 
     def show_processed_image(self):
-        self.img_widget.setImage(self.processed_img)
+        self.img_widget.set_image(self.processed_img)
 
     def read_img(self, path):
         self.img_path = path
@@ -319,7 +307,7 @@ class MainWidget(QtWidgets.QMainWindow):
         try:
             imwrite(save_path, img)
         except Exception as e:
-            self.error_dialog(e.err)
+            self.error_dialog(str(e))
         else:
             self.ask_load_saved(save_path)
 

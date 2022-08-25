@@ -17,23 +17,23 @@ class MySlider(QtWidgets.QWidget):
         layout.setContentsMargins(0, 0, 0, 0)
 
         self.slider = QtWidgets.QSlider(*args, **kargs, parent=self)
-        self.slider.valueChanged.connect(self.emitValueChanged)
-        self.slider.sliderReleased.connect(self.emitValueChangeFinished)
+        self.slider.valueChanged.connect(self.emit_valueChanged)
+        self.slider.sliderReleased.connect(self.emit_valueChangeFinished)
 
         self.spinbox = QtWidgets.QDoubleSpinBox(self)
         self.spinbox.setSuffix(f" {unit}")
         self.spinbox.setDecimals(self._decimals)
-        self.spinbox.valueChanged.connect(self.emitValueChanged)
-        self.spinbox.editingFinished.connect(self.emitValueChangeFinished)
+        self.spinbox.valueChanged.connect(self.emit_valueChanged)
+        self.spinbox.editingFinished.connect(self.emit_valueChangeFinished)
 
         layout.addWidget(self.spinbox)
         layout.addWidget(self.slider)
 
-    def emitValueChanged(self):
+    def emit_valueChanged(self):
         value = self.match_values(self.sender())
         self.valueChanged.emit(value)
 
-    def emitValueChangeFinished(self):
+    def emit_valueChangeFinished(self):
         value = self.match_values(self.sender())
         self.valueChangeFinished.emit(value)
 

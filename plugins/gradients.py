@@ -35,12 +35,21 @@ class Gradients(ProcessPlugin):
 
         self.operations_changed(self.operation.currentText())
 
-    def connect_ui(self, update_func):
-        self.operation.currentTextChanged.connect(update_func)
-        self.ksize_control.currentTextChanged.connect(update_func)
-        self.x_weight_control.valueChanged.connect(update_func)
-        self.y_weight_control.valueChanged.connect(update_func)
-        self.border_type.currentTextChanged.connect(update_func)
+        self.operation.currentTextChanged.connect(
+            lambda _: self.settings_updated.emit()
+        )
+        self.ksize_control.currentTextChanged.connect(
+            lambda _: self.settings_updated.emit()
+        )
+        self.x_weight_control.valueChanged.connect(
+            lambda _: self.settings_updated.emit()
+        )
+        self.y_weight_control.valueChanged.connect(
+            lambda _: self.settings_updated.emit()
+        )
+        self.border_type.currentTextChanged.connect(
+            lambda _: self.settings_updated.emit()
+        )
 
     def adjust_range(self, shape):
         pass

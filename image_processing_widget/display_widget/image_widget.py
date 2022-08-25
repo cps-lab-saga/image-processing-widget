@@ -83,7 +83,7 @@ class ImageWidget(QtWidgets.QWidget):
 
         self.roi.sigRegionChanged.connect(self.roi_moved)
 
-    def setImage(self, img):
+    def set_image(self, img):
         self.img = img
         if self.display_mode == DisplayMode.AUTO:
             self.im_item.setImage(img)
@@ -182,9 +182,9 @@ class ImageWidget(QtWidgets.QWidget):
         img_wy, img_wx = self.img.shape[:2]
 
         if wx > img_wx:
-            wx = img_wx
+            wx = img_wx - 1
         if wy > img_wy:
-            wy = img_wy
+            wy = img_wy - 1
 
         if x < 0:
             x = 0
@@ -263,7 +263,7 @@ if __name__ == "__main__":
 
     app = QtWidgets.QApplication([])
     widget = ImageWidget()
-    widget.imv.setImage(black_img)
+    widget.imv.set_image(black_img)
     widget.show()
 
     app.exec()

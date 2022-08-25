@@ -18,6 +18,7 @@ class HistogramWidget(QtWidgets.QWidget):
 
         self.plot_widget = pg.PlotWidget()
         self.fig = self.plot_widget.getPlotItem()
+        self.fig.setMenuEnabled(False)
         self.main_layout.addWidget(self.plot_widget)
 
         self.black_line = self.fig.plot(fillLevel=0, pen=(0, 0, 0), brush=(0, 0, 0, 50))
@@ -30,6 +31,18 @@ class HistogramWidget(QtWidgets.QWidget):
         self.blue_line = self.fig.plot(
             fillLevel=0, pen=(0, 0, 255), brush=(0, 0, 255, 50)
         )
+
+    def set_rgb(self, histr):
+        self.black_line.setData([0])
+        self.red_line.setData(histr["r"])
+        self.green_line.setData(histr["g"])
+        self.blue_line.setData(histr["b"])
+
+    def set_grayscale(self, histr):
+        self.black_line.setData(histr)
+        self.red_line.setData([0])
+        self.green_line.setData([0])
+        self.blue_line.setData([0])
 
 
 if __name__ == "__main__":

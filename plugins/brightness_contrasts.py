@@ -23,9 +23,12 @@ class BrightnessContrasts(ProcessPlugin):
         self.contrast_control.setRange(1, 3)
         self.form_layout.addRow("Contrasts:", self.contrast_control)
 
-    def connect_ui(self, update_func):
-        self.brightness_control.valueChanged.connect(update_func)
-        self.contrast_control.valueChanged.connect(update_func)
+        self.brightness_control.valueChanged.connect(
+            lambda _: self.settings_updated.emit()
+        )
+        self.contrast_control.valueChanged.connect(
+            lambda _: self.settings_updated.emit()
+        )
 
     def process_img(self, img):
         alpha = self.contrast_control.value()

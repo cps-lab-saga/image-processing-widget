@@ -58,15 +58,26 @@ class DetectLines(ProcessPlugin):
 
         self.operations_changed(self.operation.currentText())
 
-    def connect_ui(self, update_func):
-        self.rho_control.valueChanged.connect(update_func)
-        self.theta_control.valueChanged.connect(update_func)
-        self.threshold_control.valueChanged.connect(update_func)
-        self.min_theta_control.valueChanged.connect(update_func)
-        self.max_theta_control.valueChanged.connect(update_func)
-        self.min_length_control.valueChanged.connect(update_func)
-        self.max_gap_control.valueChanged.connect(update_func)
-        self.operation.currentTextChanged.connect(update_func)
+        self.rho_control.valueChanged.connect(lambda _: self.settings_updated.emit())
+        self.theta_control.valueChanged.connect(lambda _: self.settings_updated.emit())
+        self.threshold_control.valueChanged.connect(
+            lambda _: self.settings_updated.emit()
+        )
+        self.min_theta_control.valueChanged.connect(
+            lambda _: self.settings_updated.emit()
+        )
+        self.max_theta_control.valueChanged.connect(
+            lambda _: self.settings_updated.emit()
+        )
+        self.min_length_control.valueChanged.connect(
+            lambda _: self.settings_updated.emit()
+        )
+        self.max_gap_control.valueChanged.connect(
+            lambda _: self.settings_updated.emit()
+        )
+        self.operation.currentTextChanged.connect(
+            lambda _: self.settings_updated.emit()
+        )
 
     def adjust_range(self, shape):
         pass

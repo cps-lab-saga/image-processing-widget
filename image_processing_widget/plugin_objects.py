@@ -1,8 +1,10 @@
 from image_processing_widget.custom_components import BaseGuiSave
-from image_processing_widget.defs import QtWidgets
+from image_processing_widget.defs import QtWidgets, Signal
 
 
 class ProcessPlugin(QtWidgets.QWidget, BaseGuiSave):
+    settings_updated = Signal()
+
     def __init__(self):
         super().__init__()
 
@@ -10,11 +12,9 @@ class ProcessPlugin(QtWidgets.QWidget, BaseGuiSave):
 
         self.name = self.__class__.__name__
         self.setObjectName(self.name)
+        self.save_heading = f"Plugin.{self.name}"
 
         self.form_layout = QtWidgets.QFormLayout(self)
-
-    def connect_ui(self, update_func):
-        pass
 
     def adjust_range(self, shape):
         pass

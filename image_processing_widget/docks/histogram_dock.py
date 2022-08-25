@@ -21,11 +21,9 @@ class HistogramDock(BaseDock):
 
     def set_data(self, histr):
         if type(histr) == dict:
-            self.histogram_widget.red_line.setData(histr["r"])
-            self.histogram_widget.green_line.setData(histr["g"])
-            self.histogram_widget.blue_line.setData(histr["b"])
+            self.histogram_widget.set_rgb(histr)
         else:
-            self.histogram_widget.black_line.setData(histr)
+            self.histogram_widget.set_grayscale(histr)
 
 
 if __name__ == "__main__":

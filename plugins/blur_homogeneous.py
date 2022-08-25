@@ -23,9 +23,8 @@ class HomogenousBlur(ProcessPlugin):
         self.y_control.setRange(1, 100)
         self.form_layout.addRow("Kernel Height:", self.y_control)
 
-    def connect_ui(self, update_func):
-        self.x_control.valueChanged.connect(update_func)
-        self.y_control.valueChanged.connect(update_func)
+        self.x_control.valueChanged.connect(lambda _: self.settings_updated.emit())
+        self.y_control.valueChanged.connect(lambda _: self.settings_updated.emit())
 
     def adjust_range(self, shape):
         lim = round((shape[0] + shape[1]) / 2 * 0.1)

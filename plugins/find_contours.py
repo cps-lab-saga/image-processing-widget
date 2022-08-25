@@ -20,9 +20,12 @@ class FindContours(ProcessPlugin):
         self.approx_mode.addItems(enum_contour_approx_modes.keys())
         self.form_layout.addRow("Approx Mode:", self.approx_mode)
 
-    def connect_ui(self, update_func):
-        self.retrieval_mode.currentTextChanged.connect(update_func)
-        self.approx_mode.currentTextChanged.connect(update_func)
+        self.retrieval_mode.currentTextChanged.connect(
+            lambda _: self.settings_updated.emit()
+        )
+        self.approx_mode.currentTextChanged.connect(
+            lambda _: self.settings_updated.emit()
+        )
 
     def adjust_range(self, shape):
         pass

@@ -34,11 +34,14 @@ class Morph(ProcessPlugin):
         self.border_type.addItems(enum_border_types.keys())
         self.form_layout.addRow("Border Types:", self.border_type)
 
-    def connect_ui(self, update_func):
-        self.shape.currentTextChanged.connect(update_func)
-        self.size_control.valueChanged.connect(update_func)
-        self.border_type.currentTextChanged.connect(update_func)
-        self.operation.currentTextChanged.connect(update_func)
+        self.shape.currentTextChanged.connect(lambda _: self.settings_updated.emit())
+        self.size_control.valueChanged.connect(lambda _: self.settings_updated.emit())
+        self.border_type.currentTextChanged.connect(
+            lambda _: self.settings_updated.emit()
+        )
+        self.operation.currentTextChanged.connect(
+            lambda _: self.settings_updated.emit()
+        )
 
     def process_img(self, img):
         shape = enum_morph_shapes[self.shape.currentText()]

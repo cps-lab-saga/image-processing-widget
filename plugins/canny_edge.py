@@ -29,11 +29,14 @@ class Canny(ProcessPlugin):
         self.grad_type.addItems(["|dI/dx|+|dI/dy|", "√((dI/dx)^2+(dI/dy)^2)"])
         self.form_layout.addRow("Gradient:", self.grad_type)
 
-    def connect_ui(self, update_func):
-        self.grad_type.currentTextChanged.connect(update_func)
-        self.ksize_control.currentTextChanged.connect(update_func)
-        self.lower_thresh.valueChanged.connect(update_func)
-        self.upper_thresh.valueChanged.connect(update_func)
+        self.grad_type.currentTextChanged.connect(
+            lambda _: self.settings_updated.emit()
+        )
+        self.ksize_control.currentTextChanged.connect(
+            lambda _: self.settings_updated.emit()
+        )
+        self.lower_thresh.valueChanged.connect(lambda _: self.settings_updated.emit())
+        self.upper_thresh.valueChanged.connect(lambda _: self.settings_updated.emit())
 
     def adjust_range(self, shape):
         pass

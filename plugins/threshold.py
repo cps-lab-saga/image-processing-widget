@@ -20,9 +20,10 @@ class Thresholds(ProcessPlugin):
         self.thresh_control.setRange(0, 2**8 - 1)
         self.form_layout.addRow("Threshold:", self.thresh_control)
 
-    def connect_ui(self, update_func):
-        self.thresh_type.currentTextChanged.connect(update_func)
-        self.thresh_control.valueChanged.connect(update_func)
+        self.thresh_type.currentTextChanged.connect(
+            lambda _: self.settings_updated.emit()
+        )
+        self.thresh_control.valueChanged.connect(lambda _: self.settings_updated.emit())
 
     def adjust_range(self, shape):
         pass

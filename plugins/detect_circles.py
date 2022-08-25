@@ -46,13 +46,14 @@ class DetectCircles(ProcessPlugin):
         self.max_r_control.setValue(100)
         self.form_layout.addRow("Maximum Radius:", self.max_r_control)
 
-    def connect_ui(self, update_func):
-        self.dp_control.valueChanged.connect(update_func)
-        self.min_dist_control.valueChanged.connect(update_func)
-        self.param1_control.valueChanged.connect(update_func)
-        self.param2_control.valueChanged.connect(update_func)
-        self.min_r_control.valueChanged.connect(update_func)
-        self.max_r_control.valueChanged.connect(update_func)
+        self.dp_control.valueChanged.connect(lambda _: self.settings_updated.emit())
+        self.min_dist_control.valueChanged.connect(
+            lambda _: self.settings_updated.emit()
+        )
+        self.param1_control.valueChanged.connect(lambda _: self.settings_updated.emit())
+        self.param2_control.valueChanged.connect(lambda _: self.settings_updated.emit())
+        self.min_r_control.valueChanged.connect(lambda _: self.settings_updated.emit())
+        self.max_r_control.valueChanged.connect(lambda _: self.settings_updated.emit())
 
     def adjust_range(self, shape):
         lim = (shape[0] + shape[1]) / 2

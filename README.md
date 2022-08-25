@@ -1,4 +1,4 @@
-# A Grayscale Image Processing Widget
+# An Image Processing Widget
 
 GUI to explore OpenCV image processing functions.
 
