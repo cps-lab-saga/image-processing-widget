@@ -1,0 +1,8 @@
+[Core]
+Name = Filter 2D
+Module = filter2d
+
+[Documentation]
+Author = Wen Liang Yeoh
+Version = 0.1
+Description = Filter 2D

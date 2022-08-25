@@ -193,10 +193,11 @@ class MainWidget(QtWidgets.QMainWindow):
         logging.info(f"Added plugin: {plugin_info.name}.")
 
     def finished_process_image(self, processed_image):
-        if type(processed_image) == Exception:
+        if type(processed_image) in [Exception, ValueError]:
             self.error_dialog(str(processed_image))
             self.setCursor(QtCore.Qt.ArrowCursor)
             return
+
         self.processed_img = processed_image
         self.show_processed_image()
         self.setCursor(QtCore.Qt.ArrowCursor)
