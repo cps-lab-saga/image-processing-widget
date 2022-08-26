@@ -16,9 +16,16 @@ Download latest release from [here](https://github.com/fukuda-lab-saga/image-pro
 
 ## Usage
 
-The application will look for a config file [**image_processing_config.ini**] and a plugins folder [**plugins**] in its directory.
+The application will look for a config file [**image_processing_config.ini**] and a plugins folder [**plugins**] in its directory. 
+(Ensure that these are present in its directory!) 
 
-Drag and drop image onto widget.
+- Scroll to zoom in and out. 
+- Scroll on the x or y axis to zoom only vertically or horizontally.
+- Use the left mouse button to move around.
+- Double-click the left mouse button to activate ROI.
+- Double-click the right mouse button the activate crosshairs. 
+
+Drag and drop image onto widget. All read images are converted to 8-bit.
 ![Screenshot 1](/screenshots/screenshot1.png?raw=true "Screenshot 1")
 
 Select process and adjust parameters.
