@@ -1,0 +1,8 @@
+[Core]
+Name = HLAC
+Module = hlac
+
+[Documentation]
+Author = Wen Liang Yeoh
+Version = 0.1
+Description = Show hlac

@@ -80,7 +80,7 @@ class ImageWidget(QtWidgets.QWidget):
             rotateSnap=False,
             scaleSnap=True,
         )
-
+        self.roi.addScaleHandle((1, 1), (0.5, 0.5))
         self.roi.sigRegionChanged.connect(self.roi_moved)
 
     def set_image(self, img):
