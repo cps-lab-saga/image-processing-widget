@@ -4,16 +4,15 @@ from configparser import ConfigParser
 from pathlib import Path
 
 import cv2 as cv
-import qtawesome as qta
 from yapsy.PluginManager import PluginManager
 
-from image_processing_widget.custom_components import tab10_qcolor
 from image_processing_widget.defs import (
     QtCore,
     QtWidgets,
     QtGui,
     project_root,
     settings_file,
+    resource_dir,
     log_file,
     ReadMode,
 )
@@ -22,6 +21,7 @@ from image_processing_widget.docks import ControlsDock
 from image_processing_widget.funcs import check_file_type, imread, imwrite
 from image_processing_widget.process_plugin import ProcessPlugin
 from image_processing_widget.roi_plugin import RoiPlugin
+from image_processing_widget.splashscreen import SplashScreen
 from image_processing_widget.workers import ProcessWorker
 
 
@@ -29,15 +29,15 @@ class MainWidget(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
 
+        self.splashscreen = SplashScreen()
+        self.splashscreen.show()
         self.setup_logger()
         self.log_new_session()
 
         self.setWindowTitle("Image Processing")
         self.resize(1000, 500)
         self.setAcceptDrops(True)
-        self.setWindowIcon(
-            QtGui.QIcon(qta.icon("fa5s.images", color=tab10_qcolor["blue"]))
-        )
+        self.setWindowIcon(QtGui.QIcon(str(resource_dir() / "camera.svg")))
 
         self.project_paths = [project_root(), Path.cwd(), project_root().parent]
         logging.info(
@@ -62,6 +62,8 @@ class MainWidget(QtWidgets.QMainWindow):
         self.setCorner(QtCore.Qt.BottomLeftCorner, QtCore.Qt.LeftDockWidgetArea)
         self.setCorner(QtCore.Qt.TopRightCorner, QtCore.Qt.RightDockWidgetArea)
         self.setCorner(QtCore.Qt.BottomRightCorner, QtCore.Qt.RightDockWidgetArea)
+
+        self.splashscreen.set_progress(10)
 
         self.img_path = None
         self.original_img = None
@@ -93,6 +95,8 @@ class MainWidget(QtWidgets.QMainWindow):
         self.setup_process_plugins(self.plugin_manager, self.selected_process_plugins)
         self.setup_roi_plugins(self.plugin_manager, self.selected_roi_plugins)
 
+        self.splashscreen.set_progress(50)
+
         self.process_thread = QtCore.QThread()
         self.process_worker = ProcessWorker(self.controls_dock)
         self.process_worker.moveToThread(self.process_thread)
@@ -110,6 +114,9 @@ class MainWidget(QtWidgets.QMainWindow):
             logging.info(f"Restoring GUI from {str(self.settings_file)}.")
 
         self.img_widget.setFocus()
+
+        self.splashscreen.set_progress(80)
+        self.splashscreen.finish(self)
 
     def read_config(self):
         parser = ConfigParser()

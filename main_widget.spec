@@ -1,13 +1,12 @@
 # -*- mode: python ; coding: utf-8 -*-
 
-
 block_cipher = None
 
 a = Analysis(
     ['image_processing_widget\\main_widget.py'],
     pathex=[],
     binaries=[],
-    datas=[],
+    datas=[('image_processing_widget\\resource\\camera.svg', 'image_processing_widget\\resource')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
@@ -27,7 +26,8 @@ exe = EXE(
     a.zipfiles,
     a.datas,
     [],
-    name='image_processing-widget-0.2.0',
+    name='image-processing-widget-0.2.0',
+    icon="image_processing_widget\\resource\\camera.ico",
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,

@@ -45,6 +45,10 @@ def log_file() -> Path:
     return Path.cwd() / "image_processing.log"
 
 
+def resource_dir() -> Path:
+    return project_root() / "resource"
+
+
 class ReadMode(Enum):
     GRAYSCALE = auto()
     COLOR = auto()
