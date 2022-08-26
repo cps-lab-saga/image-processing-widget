@@ -7,7 +7,7 @@ from image_processing_widget.funcs.cv_enums import (
     enum_border_types,
     enum_morph_types,
 )
-from image_processing_widget.plugin_objects import ProcessPlugin
+from image_processing_widget.process_plugin import ProcessPlugin
 
 
 class MorphEx(ProcessPlugin):

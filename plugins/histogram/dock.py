@@ -1,6 +1,6 @@
 from image_processing_widget.custom_components import BaseDock
 from image_processing_widget.defs import QtWidgets
-from image_processing_widget.display_widget import HistogramWidget
+from .plot import HistogramPlot
 
 
 class HistogramDock(BaseDock):
@@ -9,8 +9,8 @@ class HistogramDock(BaseDock):
 
         self.setWindowTitle("Histogram")
 
-        self.histogram_widget = HistogramWidget()
-        self.dock_layout.addWidget(self.histogram_widget)
+        self.histogram_plot = HistogramPlot()
+        self.dock_layout.addWidget(self.histogram_plot)
         self.hide()
 
     def show_hide_dock(self, show):
@@ -21,9 +21,9 @@ class HistogramDock(BaseDock):
 
     def set_data(self, histr):
         if type(histr) == dict:
-            self.histogram_widget.set_rgb(histr)
+            self.histogram_plot.set_rgb(histr)
         else:
-            self.histogram_widget.set_grayscale(histr)
+            self.histogram_plot.set_grayscale(histr)
 
 
 if __name__ == "__main__":

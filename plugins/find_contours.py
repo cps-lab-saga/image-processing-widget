@@ -5,7 +5,7 @@ from image_processing_widget.funcs.cv_enums import (
     enum_contour_retrieval_modes,
     enum_contour_approx_modes,
 )
-from image_processing_widget.plugin_objects import ProcessPlugin
+from image_processing_widget.process_plugin import ProcessPlugin
 
 
 class FindContours(ProcessPlugin):

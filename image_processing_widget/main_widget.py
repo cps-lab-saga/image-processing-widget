@@ -18,9 +18,10 @@ from image_processing_widget.defs import (
     ReadMode,
 )
 from image_processing_widget.display_widget.image_widget import ImageWidget
-from image_processing_widget.docks import ControlsDock, HistogramDock
+from image_processing_widget.docks import ControlsDock
 from image_processing_widget.funcs import check_file_type, imread, imwrite
-from image_processing_widget.plugin_objects import ProcessPlugin
+from image_processing_widget.process_plugin import ProcessPlugin
+from image_processing_widget.roi_plugin import RoiPlugin
 from image_processing_widget.workers import ProcessWorker
 
 
@@ -45,8 +46,12 @@ class MainWidget(QtWidgets.QMainWindow):
         self.config_parser = self.read_config()
         self.read_mode = self.get_read_mode(self.config_parser)
 
-        self.selected_plugins = self.get_plugins(self.config_parser)
-        logging.info(f"Plugins {self.selected_plugins} were selected.")
+        self.selected_process_plugins = self.get_plugins(
+            self.config_parser, "process_plugins"
+        )
+        self.selected_roi_plugins = self.get_plugins(self.config_parser, "roi_plugins")
+        logging.info(f"Process plugins {self.selected_process_plugins} were selected.")
+        logging.info(f"ROI plugins {self.selected_roi_plugins} were selected.")
         self.plugin_dirs = [x / "plugins" for x in self.project_paths]
 
         self.main_widget = QtWidgets.QWidget(self)
@@ -70,21 +75,23 @@ class MainWidget(QtWidgets.QMainWindow):
         self.controls_dock.save_as.connect(self.save_as_button_clicked)
         self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.controls_dock)
 
-        self.histogram_dock = HistogramDock()
-        self.addDockWidget(QtCore.Qt.BottomDockWidgetArea, self.histogram_dock)
-
         self.img_widget = ImageWidget(self.config_parser)
         self.main_layout.addWidget(self.img_widget)
-        self.img_widget.show_histogram.connect(self.histogram_dock.show_hide_dock)
-        self.img_widget.histogram_updated.connect(self.histogram_dock.set_data)
+        self.img_widget.slice_selected.connect(self.roi_shown)
+        self.img_widget.slice_selection_changed.connect(self.roi_moved)
 
-        self.plugins = {}
+        self.plugin_docks = {}
+        self.process_plugins = {}
+        self.roi_plugins = {}
         self.plugin_manager = PluginManager(
-            categories_filter={"PluginObject": ProcessPlugin},
+            categories_filter={"ProcessPlugin": ProcessPlugin, "RoiPlugin": RoiPlugin},
             plugin_info_ext="image-processing-plugin",
             directories_list=self.plugin_dirs,
         )
-        self.setup_plugins(self.plugin_manager, self.selected_plugins)
+        self.plugin_manager.locatePlugins()
+        self.plugin_manager.loadPlugins()
+        self.setup_process_plugins(self.plugin_manager, self.selected_process_plugins)
+        self.setup_roi_plugins(self.plugin_manager, self.selected_roi_plugins)
 
         self.process_thread = QtCore.QThread()
         self.process_worker = ProcessWorker(self.controls_dock)
@@ -117,12 +124,10 @@ class MainWidget(QtWidgets.QMainWindow):
         return parser
 
     @staticmethod
-    def get_plugins(config_parser):
-        if config_parser.has_option("Plugins", "plugins"):
+    def get_plugins(config_parser, key):
+        if config_parser.has_option("Plugins", key):
             return [
-                x.strip()
-                for x in config_parser.get("Plugins", "plugins").split(",")
-                if x
+                x.strip() for x in config_parser.get("Plugins", key).split(",") if x
             ]
         else:
             return []
@@ -147,50 +152,60 @@ class MainWidget(QtWidgets.QMainWindow):
             logging.warning("Using default read_mode: COLOR")
             return ReadMode.COLOR
 
-    def setup_plugins(self, plugin_manager, selected_plugins):
-        plugin_manager.locatePlugins()
-        plugin_manager.loadPlugins()
+    def setup_process_plugins(self, plugin_manager, selected_plugins):
         available_plugins = {
             plugin_info.name: plugin_info
-            for plugin_info in plugin_manager.getAllPlugins()
+            for plugin_info in plugin_manager.getPluginsOfCategory("ProcessPlugin")
         }
 
         if missing_plugins := (set(selected_plugins) - set(available_plugins)):
-            msg = f"Selected plugins [{', '.join(missing_plugins)}] are not available"
+            msg = f"Selected process plugins [{', '.join(missing_plugins)}] are not available"
             self.error_dialog(msg)
             logging.warning(msg)
 
         for plugin_info in available_plugins.values():
             if (
                 plugin_info.name in selected_plugins
-                and plugin_info.name not in self.plugins.keys()
+                and plugin_info.name not in self.process_plugins.keys()
             ):
-                if "Dependencies" in plugin_info.details["Core"].keys():
-                    dependencies = [
-                        x.strip()
-                        for x in plugin_info.details["Core"]["Dependencies"].split(",")
-                    ]
-                    for plugin_name in dependencies:
-                        if plugin_name in self.plugins.keys():
-                            continue
-                        elif plugin_name in available_plugins:
-                            self.activate_plugin(available_plugins[plugin_name])
-                        else:
-                            self.error_dialog(
-                                f"Dependent plugin ({plugin_name}) not available"
-                            )
-                            logging.warning(
-                                f"Dependent plugin ({plugin_name}) not available."
-                            )
+                self.activate_process_plugin(plugin_info)
 
-                self.activate_plugin(plugin_info)
+    def setup_roi_plugins(self, plugin_manager, selected_plugins):
+        available_plugins = {
+            plugin_info.name: plugin_info
+            for plugin_info in plugin_manager.getPluginsOfCategory("RoiPlugin")
+        }
 
-    def activate_plugin(self, plugin_info):
+        if missing_plugins := (set(selected_plugins) - set(available_plugins)):
+            msg = (
+                f"Selected roi plugins [{', '.join(missing_plugins)}] are not available"
+            )
+            self.error_dialog(msg)
+            logging.warning(msg)
+
+        for plugin_info in available_plugins.values():
+            if (
+                plugin_info.name in selected_plugins
+                and plugin_info.name not in self.roi_plugins.keys()
+            ):
+                self.activate_roi_plugin(plugin_info)
+
+    def activate_process_plugin(self, plugin_info):
         self.controls_dock.process_groupbox.add_process_plugin(
             plugin_info.name, plugin_info.plugin_object
         )
-        self.plugins[plugin_info.name] = plugin_info.plugin_object
-        logging.info(f"Added plugin: {plugin_info.name}.")
+        self.process_plugins[plugin_info.name] = plugin_info.plugin_object
+        logging.info(f"Added process plugin: {plugin_info.name}.")
+
+    def activate_roi_plugin(self, plugin_info):
+        if plugin_info.plugin_object.dock is not None:
+            self.plugin_docks[plugin_info.name] = plugin_info.plugin_object.dock
+            self.addDockWidget(
+                QtCore.Qt.RightDockWidgetArea,
+                self.plugin_docks[plugin_info.name],
+            )
+        self.roi_plugins[plugin_info.name] = plugin_info.plugin_object
+        logging.info(f"Added roi plugin: {plugin_info.name}.")
 
     def finished_process_image(self, processed_image):
         if type(processed_image) in [Exception, ValueError]:
@@ -229,6 +244,14 @@ class MainWidget(QtWidgets.QMainWindow):
 
         self.start_process_image()
         self.controls_dock.process_groupbox.adjust_range(self.original_img.shape)
+
+    def roi_shown(self, show):
+        for plugin in self.roi_plugins.values():
+            plugin.roi_shown(show)
+
+    def roi_moved(self, img_slice):
+        for plugin in self.roi_plugins.values():
+            plugin.roi_moved(img_slice)
 
     def dragEnterEvent(self, e):
         if e.mimeData().hasUrls():

@@ -2,7 +2,7 @@ import cv2 as cv
 import numpy as np
 
 from image_processing_widget.defs import QtWidgets
-from image_processing_widget.plugin_objects import ProcessPlugin
+from image_processing_widget.process_plugin import ProcessPlugin
 
 
 class FitBoundary(ProcessPlugin):

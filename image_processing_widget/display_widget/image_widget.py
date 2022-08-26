@@ -1,15 +1,15 @@
 import contextlib
 import logging
 
-import cv2 as cv
+import numpy as np
 import pyqtgraph as pg
 
 from image_processing_widget.defs import QtCore, QtWidgets, Signal, DisplayMode
 
 
 class ImageWidget(QtWidgets.QWidget):
-    show_histogram = Signal(bool)
-    histogram_updated = Signal(object)
+    slice_selected = Signal(bool)
+    slice_selection_changed = Signal(np.ndarray)
 
     def __init__(self, config_parser=None, parent=None):
         super().__init__(parent=parent)
@@ -156,7 +156,7 @@ class ImageWidget(QtWidgets.QWidget):
                 self.fig.addItem(self.roi)
                 self.mouse_moved(evt.scenePos())
 
-            self.show_histogram.emit(self.show_roi)
+            self.slice_selected.emit(self.show_roi)
 
     def range_changed(self):
         """
@@ -173,7 +173,7 @@ class ImageWidget(QtWidgets.QWidget):
 
     def roi_moved(self):
         """
-        keep roi inside image and as int.
+        keep roi inside image and as int and emit slice of image.
         """
         if self.img is None:
             return
@@ -200,41 +200,17 @@ class ImageWidget(QtWidgets.QWidget):
         self.roi.setSize((wx, wy))
         self.roi.blockSignals(False)
 
-        histr = self.calculate_histogram()
-        self.histogram_updated.emit(histr)
+        if self.img.ndim == 3:
+            img_slice = self.img[y : y + wy, x : x + wx, :]
+            self.slice_selection_changed.emit(img_slice)
+        elif self.img.ndim == 2:
+            img_slice = self.img[y : y + wy, x : x + wx]
+            self.slice_selection_changed.emit(img_slice)
 
     def get_roi_rect(self):
         x, y = [round(c) for c in self.roi.pos()]
         wx, wy = [round(c) for c in self.roi.size()]
         return x, y, wx, wy
-
-    def calculate_histogram(self):
-        x, y, wx, wy = self.get_roi_rect()
-
-        if self.img.ndim == 3:
-            img = self.img[y : y + wy, x : x + wx, :]
-            histr = {
-                color: cv.calcHist(
-                    images=[img],
-                    channels=[i],
-                    mask=None,
-                    histSize=[2**8],
-                    ranges=[0, 2**8],
-                ).flat
-                for i, color in enumerate(("r", "g", "b"))
-            }
-            return histr
-
-        elif self.img.ndim == 2:
-            img = self.img[y : y + wy, x : x + wx]
-            histr = cv.calcHist(
-                images=[img],
-                channels=[0],
-                mask=None,
-                histSize=[2**8],
-                ranges=[0, 2**8],
-            ).flat
-            return histr
 
     @staticmethod
     def get_image_config(config_parser):

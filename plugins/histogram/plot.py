@@ -3,7 +3,7 @@ import pyqtgraph as pg
 from image_processing_widget.defs import QtWidgets
 
 
-class HistogramWidget(QtWidgets.QWidget):
+class HistogramPlot(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
 
@@ -51,7 +51,7 @@ if __name__ == "__main__":
     sample_data = np.array(range(25))
 
     app = QtWidgets.QApplication([])
-    widget = HistogramWidget()
+    widget = HistogramPlot()
     widget.black_line.setData(sample_data)
     widget.show()
 

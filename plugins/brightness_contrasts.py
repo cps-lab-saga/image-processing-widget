@@ -2,7 +2,7 @@ import cv2 as cv
 
 from image_processing_widget.custom_components import MySlider
 from image_processing_widget.defs import QtCore, QtWidgets
-from image_processing_widget.plugin_objects import ProcessPlugin
+from image_processing_widget.process_plugin import ProcessPlugin
 
 
 class BrightnessContrasts(ProcessPlugin):
