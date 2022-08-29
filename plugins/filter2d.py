@@ -115,7 +115,7 @@ class Filter2D(ProcessPlugin):
                 item = self.kernel_table_widget.item(row_selected + i, col_selected + j)
                 item.setText(str(data[i][j]))
 
-        except:
+        except Exception:
             return
 
     def copy_selection(self):
@@ -144,7 +144,7 @@ class Filter2D(ProcessPlugin):
             if item is not None:
                 try:
                     m[i, j] = float(item.text())
-                except:
+                except Exception:
                     m[i, j] = float(Fraction(item.text()))
         if (m - m.astype(int) == 0).all():
             m = m.astype(int)

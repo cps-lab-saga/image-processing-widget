@@ -34,7 +34,6 @@ class ImageWidget(QtWidgets.QWidget):
         self.roi_hover_pen = pg.mkPen(color=(188, 189, 34), width=2)
 
         self.main_layout = QtWidgets.QVBoxLayout(self)
-        self.setLayout(self.main_layout)
 
         self.plot_widget = pg.PlotWidget()
         self.fig = self.plot_widget.getPlotItem()

@@ -33,7 +33,11 @@ class Thresholds(ProcessPlugin):
 
     def process_img(self, img):
         thresh_type = enum_thresholds[self.thresh_type.currentText()]
+        if thresh_type in [cv.THRESH_OTSU, cv.THRESH_TRIANGLE] and img.ndim > 2:
+            raise Exception("Only accepts 8-bit binary source image")
+
         threshold = round(self.thresh_control.value())
+
         thresh, new_img = cv.threshold(img, threshold, 2**8 - 1, thresh_type)
         if thresh_type in [cv.THRESH_OTSU, cv.THRESH_TRIANGLE]:
             self.thresh_control.setValue(thresh)

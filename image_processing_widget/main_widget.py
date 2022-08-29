@@ -41,7 +41,7 @@ class MainWidget(QtWidgets.QMainWindow):
 
         self.project_paths = [project_root(), Path.cwd(), project_root().parent]
         logging.info(
-            f"Looking for config file in {*[str(x) for x in self.project_paths],}."
+            f"Looking for config file in {', '.join([str(x) for x in self.project_paths])}."
         )
         self.config_parser = self.read_config()
         self.read_mode = self.get_read_mode(self.config_parser)
