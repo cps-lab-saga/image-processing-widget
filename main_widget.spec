@@ -1,5 +1,8 @@
 # -*- mode: python ; coding: utf-8 -*-
 
+from image_processing_widget.defs import __version__
+
+
 block_cipher = None
 
 a = Analysis(
@@ -26,7 +29,7 @@ exe = EXE(
     a.zipfiles,
     a.datas,
     [],
-    name='image-processing-widget-0.2.0',
+    name=f"image-processing-widget-{__version__}",
     icon="image_processing_widget\\resource\\camera.ico",
     debug=False,
     bootloader_ignore_signals=False,

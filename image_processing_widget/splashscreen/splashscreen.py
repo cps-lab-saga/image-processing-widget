@@ -1,7 +1,12 @@
-import importlib.metadata
 from time import sleep
 
-from image_processing_widget.defs import QtCore, QtGui, QtWidgets, resource_dir
+from image_processing_widget.defs import (
+    QtCore,
+    QtGui,
+    QtWidgets,
+    resource_dir,
+    __version__,
+)
 
 
 class SplashScreen(QtWidgets.QSplashScreen):
@@ -17,8 +22,6 @@ class SplashScreen(QtWidgets.QSplashScreen):
             QtWidgets.QApplication.primaryScreen().geometry().center()
             - self.rect().center()
         )
-
-        self.version = importlib.metadata.version("image_processing_widget")
 
         self.frame = QtWidgets.QFrame(self)
         self.frame.setObjectName("Frame")
@@ -48,7 +51,7 @@ class SplashScreen(QtWidgets.QSplashScreen):
         self.subtitle_label = QtWidgets.QLabel(self.frame)
         self.subtitle_label.setObjectName("SubTitleLabel")
         self.subtitle_label.setAlignment(QtCore.Qt.AlignCenter)
-        self.subtitle_label.setText(f"Fukuda-Yeoh Lab 2022\t v{self.version}")
+        self.subtitle_label.setText(f"Fukuda-Yeoh Lab 2022\t v{__version__}")
         self.frame_layout.addWidget(self.subtitle_label)
 
         self.progress_bar = QtWidgets.QProgressBar(self.frame)

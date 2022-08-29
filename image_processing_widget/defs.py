@@ -1,5 +1,8 @@
+import importlib.metadata
 from enum import Enum, auto
 from pathlib import Path
+
+__version__ = importlib.metadata.version("image_processing_widget")
 
 try:
     from PySide6 import QtGui, QtWidgets, QtCore
