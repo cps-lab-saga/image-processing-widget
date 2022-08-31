@@ -4,13 +4,11 @@ GUI to explore OpenCV image processing functions.
 
 ## Installation
 
-Download latest release
-from [here](https://github.com/fukuda-lab-saga/image-processing-widget/releases/latest/download/image-processing-widget.zip)
-.
+Download latest release from [here](https://github.com/fukuda-lab-saga/image-processing-widget/releases/latest/).
 
 1. From packaged .exe file (Windows)
-    - Download latest .exe file from releases.
-    - Run .exe file
+    - Download latest .zip file from releases.
+    - Extract contents and run the .exe file
         - The application will look for a config file **image_processing_config.ini** and a plugins folder **plugins**
           in its current directory.
 2. From wheel
