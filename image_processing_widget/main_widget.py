@@ -101,6 +101,7 @@ class MainWidget(QtWidgets.QMainWindow):
         self.process_worker = ProcessWorker(self.controls_dock)
         self.process_worker.moveToThread(self.process_thread)
         self.process_worker.finished.connect(self.finished_process_image)
+        self.process_worker.process_failed.connect(self.error_dialog)
         self.process_thread.started.connect(self.process_worker.run)
         self.process_thread.start()
 
@@ -201,6 +202,7 @@ class MainWidget(QtWidgets.QMainWindow):
         self.controls_dock.process_groupbox.add_process_plugin(
             plugin_info.name, plugin_info.plugin_object
         )
+        plugin_info.plugin_object.process_failed.connect(self.error_dialog)
         self.process_plugins[plugin_info.name] = plugin_info.plugin_object
         logging.info(f"Added process plugin: {plugin_info.name}.")
 
@@ -215,8 +217,7 @@ class MainWidget(QtWidgets.QMainWindow):
         logging.info(f"Added roi plugin: {plugin_info.name}.")
 
     def finished_process_image(self, processed_image):
-        if isinstance(processed_image, (Exception, ValueError)):
-            self.error_dialog(str(processed_image))
+        if processed_image is None:
             self.setCursor(QtCore.Qt.ArrowCursor)
             return
 
@@ -302,7 +303,7 @@ class MainWidget(QtWidgets.QMainWindow):
             self.controls_dock.gui_restore(settings)
         except Exception as e:
             self.error_dialog(f"{self.settings_file} is corrupted!\n{str(e)}")
-            print(f"{self.settings_file} is corrupted!")
+            logging.warning(f"{self.settings_file} is corrupted!")
 
     def closeEvent(self, event):
         """save before closing"""

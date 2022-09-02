@@ -4,6 +4,7 @@ from image_processing_widget.defs import QtWidgets, Signal
 
 class ProcessPlugin(QtWidgets.QWidget, BaseGuiSave):
     settings_updated = Signal()
+    process_failed = Signal(str)
 
     def __init__(self):
         super().__init__()

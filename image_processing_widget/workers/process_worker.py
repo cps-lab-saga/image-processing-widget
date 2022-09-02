@@ -5,6 +5,7 @@ from image_processing_widget.defs import QtCore, Signal
 
 class ProcessWorker(QtCore.QObject):
     finished = Signal(object)
+    process_failed = Signal(str)
 
     def __init__(self, dock, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -24,4 +25,5 @@ class ProcessWorker(QtCore.QObject):
             oriented_image = self.dock.orient_groupbox.orient_img(img)
             return process_widget.process_img(oriented_image)
         except Exception as e:
-            return e
+            self.process_failed.emit(str(e))
+            return
