@@ -215,7 +215,7 @@ class MainWidget(QtWidgets.QMainWindow):
         logging.info(f"Added roi plugin: {plugin_info.name}.")
 
     def finished_process_image(self, processed_image):
-        if type(processed_image) in [Exception, ValueError]:
+        if isinstance(processed_image, (Exception, ValueError)):
             self.error_dialog(str(processed_image))
             self.setCursor(QtCore.Qt.ArrowCursor)
             return

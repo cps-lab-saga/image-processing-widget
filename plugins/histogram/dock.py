@@ -20,7 +20,7 @@ class HistogramDock(BaseDock):
             self.hide()
 
     def set_data(self, histr):
-        if type(histr) == dict:
+        if isinstance(histr, dict):
             self.histogram_plot.set_rgb(histr)
         else:
             self.histogram_plot.set_grayscale(histr)
