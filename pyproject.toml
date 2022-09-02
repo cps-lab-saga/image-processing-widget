@@ -1,8 +1,23 @@
 [tool.poetry]
 name = "image-processing-widget"
-version = "0.2.1"
+version = "0.2.2"
 description = "GUI to explore OpenCV image processing functions"
 authors = ["wenliangyeoh <wlyeoh@cc.saga-u.ac.jp>"]
+readme = "README.md"
+repository = "https://github.com/fukuda-lab-saga/image-processing-widget"
+keywords = ["opencv", "gui", "pyside6"]
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Education",
+]
+include = [
+    "image_processing_config.ini",
+    "image_processing_widget/resource/*",
+    "plugins/*",
+    "plugins/**/*",
+]
+
 
 [tool.poetry.dependencies]
 python = ">3.10, <3.11"

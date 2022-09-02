@@ -2,6 +2,7 @@ import logging
 import sys
 from configparser import ConfigParser
 from pathlib import Path
+from time import sleep
 
 import cv2 as cv
 from yapsy.PluginManager import PluginManager
@@ -307,8 +308,12 @@ class MainWidget(QtWidgets.QMainWindow):
 
     def closeEvent(self, event):
         """save before closing"""
+        self.process_worker.stop()
+        self.process_thread.quit()
         settings = QtCore.QSettings(str(self.settings_file), QtCore.QSettings.IniFormat)
         self.gui_save(settings)
+        while self.process_thread.isRunning():
+            sleep(0.5)
         event.accept()
 
     def error_dialog(self, error):

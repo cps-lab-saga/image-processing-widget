@@ -26,10 +26,10 @@ class SplashScreen(QtWidgets.QSplashScreen):
         self.frame = QtWidgets.QFrame(self)
         self.frame.setObjectName("Frame")
         self.frame.setAttribute(QtCore.Qt.WA_StyledBackground)
-        self.main_layout.addWidget(self.frame)
         self.frame_layout = QtWidgets.QVBoxLayout(self.frame)
+        self.main_layout.addWidget(self.frame)
 
-        title_row = QtWidgets.QHBoxLayout(self.frame)
+        title_row = QtWidgets.QHBoxLayout()
         self.frame_layout.addLayout(title_row)
 
         icon_size = 200

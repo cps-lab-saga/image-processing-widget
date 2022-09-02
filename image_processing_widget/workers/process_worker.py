@@ -13,11 +13,14 @@ class ProcessWorker(QtCore.QObject):
         self.dock = dock
         self.queue = Queue()
 
+        self._stop_flag = False
+
     def run(self):
-        while True:
+        while not self._stop_flag:
             img = self.queue.get()
-            processed_image = self.process_img(img)
-            self.finished.emit(processed_image)
+            if img is not None:
+                processed_image = self.process_img(img)
+                self.finished.emit(processed_image)
 
     def process_img(self, img):
         try:
@@ -27,3 +30,7 @@ class ProcessWorker(QtCore.QObject):
         except Exception as e:
             self.process_failed.emit(str(e))
             return
+
+    def stop(self):
+        self._stop_flag = True
+        self.queue.put(None)
