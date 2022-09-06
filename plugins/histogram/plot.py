@@ -19,17 +19,18 @@ class HistogramPlot(QtWidgets.QWidget):
         self.plot_widget = pg.PlotWidget()
         self.fig = self.plot_widget.getPlotItem()
         self.fig.setMenuEnabled(False)
+        self.fig.addLegend()
         self.main_layout.addWidget(self.plot_widget)
 
         self.black_line = self.fig.plot(fillLevel=0, pen=(0, 0, 0), brush=(0, 0, 0, 50))
         self.red_line = self.fig.plot(
-            fillLevel=0, pen=(255, 0, 0), brush=(255, 0, 0, 50)
+            fillLevel=0, pen=(255, 0, 0), brush=(255, 0, 0, 50), name="Red"
         )
         self.green_line = self.fig.plot(
-            fillLevel=0, pen=(0, 255, 0), brush=(0, 255, 0, 50)
+            fillLevel=0, pen=(0, 255, 0), brush=(0, 255, 0, 50), name="Green"
         )
         self.blue_line = self.fig.plot(
-            fillLevel=0, pen=(0, 0, 255), brush=(0, 0, 255, 50)
+            fillLevel=0, pen=(0, 0, 255), brush=(0, 0, 255, 50), name="Blue"
         )
 
     def set_rgb(self, histr):
