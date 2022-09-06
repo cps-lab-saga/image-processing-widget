@@ -1,0 +1,8 @@
+[Core]
+Name = Aruco Detect
+Module = aruco_detect
+
+[Documentation]
+Author = Wen Liang Yeoh
+Version = 0.1
+Description = Aruco Detect

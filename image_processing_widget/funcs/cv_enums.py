@@ -59,3 +59,26 @@ enum_depth = {
     "float32": cv.CV_32F,
     "float64": cv.CV_64F,
 }
+
+enum_aruco_dict = {
+    "ARUCO_4X4_50": cv.aruco.DICT_4X4_50,
+    "ARUCO_4X4_100": cv.aruco.DICT_4X4_100,
+    "ARUCO_4X4_250": cv.aruco.DICT_4X4_250,
+    "ARUCO_4X4_1000": cv.aruco.DICT_4X4_1000,
+    "ARUCO_5X5_50": cv.aruco.DICT_5X5_50,
+    "ARUCO_5X5_100": cv.aruco.DICT_5X5_100,
+    "ARUCO_5X5_250": cv.aruco.DICT_5X5_250,
+    "ARUCO_5X5_1000": cv.aruco.DICT_5X5_1000,
+    "ARUCO_6X6_50": cv.aruco.DICT_6X6_50,
+    "ARUCO_6X6_100": cv.aruco.DICT_6X6_100,
+    "ARUCO_6X6_1000": cv.aruco.DICT_6X6_1000,
+    "ARUCO_7X7_50": cv.aruco.DICT_7X7_50,
+    "ARUCO_7X7_100": cv.aruco.DICT_7X7_100,
+    "ARUCO_7X7_250": cv.aruco.DICT_7X7_250,
+    "ARUCO_7X7_1000": cv.aruco.DICT_7X7_1000,
+    "ARUCO_ORIGINAL": cv.aruco.DICT_ARUCO_ORIGINAL,
+    "APRILTAG_16h5": cv.aruco.DICT_APRILTAG_16h5,
+    "APRILTAG_25h9": cv.aruco.DICT_APRILTAG_25h9,
+    "APRILTAG_36h10": cv.aruco.DICT_APRILTAG_36h10,
+    "APRILTAG_36h11": cv.aruco.DICT_APRILTAG_36h11,
+}
