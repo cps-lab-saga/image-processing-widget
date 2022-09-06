@@ -1,6 +1,7 @@
 import inspect
 
 from image_processing_widget.custom_components.my_slider import MySlider
+from image_processing_widget.custom_components.path_edit import PathEdit
 from image_processing_widget.defs import QtWidgets
 from image_processing_widget.funcs import strtobool
 
@@ -17,7 +18,7 @@ class BaseGuiSave:
     def gui_save(self, settings):
         for name, obj in inspect.getmembers(self):
             value = None
-            if isinstance(obj, QtWidgets.QLineEdit):
+            if isinstance(obj, (QtWidgets.QLineEdit, PathEdit)):
                 value = obj.text()
             elif isinstance(obj, QtWidgets.QSpinBox):
                 value = obj.value()
@@ -37,7 +38,7 @@ class BaseGuiSave:
     def gui_restore(self, settings):
         for name, obj in inspect.getmembers(self):
             if value := settings.value(f"{self.save_heading}/{name}"):
-                if isinstance(obj, QtWidgets.QLineEdit):
+                if isinstance(obj, (QtWidgets.QLineEdit, PathEdit)):
                     obj.setText(value)
                 elif isinstance(obj, QtWidgets.QSpinBox):
                     obj.setValue(int(value))

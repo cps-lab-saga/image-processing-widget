@@ -1,0 +1,8 @@
+[Core]
+Name = Aruco Pose
+Module = aruco_pose
+
+[Documentation]
+Author = Wen Liang Yeoh
+Version = 0.1
+Description = Estimate pose of aruco markers
