@@ -1,6 +1,6 @@
 import cv2 as cv
 
-from image_processing_widget.custom_components import MySlider
+from image_processing_widget.custom_components import SpinBoxSlider
 from image_processing_widget.defs import QtCore, QtWidgets
 from image_processing_widget.funcs.cv_enums import (
     enum_morph_shapes,
@@ -17,7 +17,7 @@ class Dilate(ProcessPlugin):
         self.dilation_shape.addItems(enum_morph_shapes.keys())
         self.form_layout.addRow("Dilation Shape:", self.dilation_shape)
 
-        self.dilatation_size_control = MySlider(
+        self.dilatation_size_control = SpinBoxSlider(
             decimals=0, orientation=QtCore.Qt.Horizontal, parent=self
         )
         self.dilatation_size_control.setSingleStep(1)

@@ -1,6 +1,6 @@
 import cv2 as cv
 
-from image_processing_widget.custom_components import MySlider
+from image_processing_widget.custom_components import SpinBoxSlider
 from image_processing_widget.defs import QtCore, QtWidgets
 from image_processing_widget.funcs.cv_enums import enum_thresholds
 from image_processing_widget.process_plugin import ProcessPlugin
@@ -15,7 +15,9 @@ class Thresholds(ProcessPlugin):
         self.thresh_type.currentTextChanged.connect(self.operations_changed)
         self.form_layout.addRow("Type:", self.thresh_type)
 
-        self.thresh_control = MySlider(decimals=0, orientation=QtCore.Qt.Horizontal)
+        self.thresh_control = SpinBoxSlider(
+            decimals=0, orientation=QtCore.Qt.Horizontal
+        )
         self.thresh_control.setSingleStep(1)
         self.thresh_control.setRange(0, 2**8 - 1)
         self.form_layout.addRow("Threshold:", self.thresh_control)

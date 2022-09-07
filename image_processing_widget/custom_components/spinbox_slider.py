@@ -3,7 +3,7 @@ import logging
 from image_processing_widget.defs import QtCore, QtWidgets, Signal
 
 
-class MySlider(QtWidgets.QWidget):
+class SpinBoxSlider(QtWidgets.QWidget):
     valueChanged = Signal(float)
     valueChangeFinished = Signal(float)
 
@@ -118,7 +118,7 @@ class MySlider(QtWidgets.QWidget):
 if __name__ == "__main__":
     app = QtWidgets.QApplication([])
 
-    widget = MySlider(orientation=QtCore.Qt.Horizontal)
+    widget = SpinBoxSlider(orientation=QtCore.Qt.Horizontal)
     widget.setRange(0, 2**31)
     widget.show()
 

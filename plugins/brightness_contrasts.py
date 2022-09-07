@@ -1,6 +1,6 @@
 import cv2 as cv
 
-from image_processing_widget.custom_components import MySlider
+from image_processing_widget.custom_components import SpinBoxSlider
 from image_processing_widget.defs import QtCore, QtWidgets
 from image_processing_widget.process_plugin import ProcessPlugin
 
@@ -9,14 +9,14 @@ class BrightnessContrasts(ProcessPlugin):
     def __init__(self):
         super().__init__()
 
-        self.brightness_control = MySlider(
+        self.brightness_control = SpinBoxSlider(
             decimals=0, orientation=QtCore.Qt.Horizontal, parent=self
         )
         self.brightness_control.setSingleStep(1)
         self.brightness_control.setRange(0, 100)
         self.form_layout.addRow("Brightness:", self.brightness_control)
 
-        self.contrast_control = MySlider(
+        self.contrast_control = SpinBoxSlider(
             decimals=2, orientation=QtCore.Qt.Horizontal, parent=self
         )
         self.contrast_control.setSingleStep(0.01)

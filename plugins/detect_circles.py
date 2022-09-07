@@ -1,7 +1,7 @@
 import cv2 as cv
 import numpy as np
 
-from image_processing_widget.custom_components import MySlider
+from image_processing_widget.custom_components import SpinBoxSlider
 from image_processing_widget.defs import QtCore, QtWidgets
 from image_processing_widget.process_plugin import ProcessPlugin
 
@@ -10,37 +10,43 @@ class DetectCircles(ProcessPlugin):
     def __init__(self):
         super().__init__()
 
-        self.dp_control = MySlider(decimals=2, orientation=QtCore.Qt.Horizontal)
+        self.dp_control = SpinBoxSlider(decimals=2, orientation=QtCore.Qt.Horizontal)
         self.dp_control.setSingleStep(0.01)
         self.dp_control.setRange(1, 5)
         self.dp_control.setValue(1)
         self.form_layout.addRow("Resolution Ratio:", self.dp_control)
 
-        self.min_dist_control = MySlider(decimals=2, orientation=QtCore.Qt.Horizontal)
+        self.min_dist_control = SpinBoxSlider(
+            decimals=2, orientation=QtCore.Qt.Horizontal
+        )
         self.min_dist_control.setSingleStep(0.01)
         self.min_dist_control.setRange(1, 10)
         self.min_dist_control.setValue(1)
         self.form_layout.addRow("Min Distance:", self.min_dist_control)
 
-        self.param1_control = MySlider(decimals=2, orientation=QtCore.Qt.Horizontal)
+        self.param1_control = SpinBoxSlider(
+            decimals=2, orientation=QtCore.Qt.Horizontal
+        )
         self.param1_control.setSingleStep(1)
         self.param1_control.setRange(1, 255)
         self.param1_control.setValue(100)
         self.form_layout.addRow("Param1:", self.param1_control)
 
-        self.param2_control = MySlider(decimals=2, orientation=QtCore.Qt.Horizontal)
+        self.param2_control = SpinBoxSlider(
+            decimals=2, orientation=QtCore.Qt.Horizontal
+        )
         self.param2_control.setSingleStep(1)
         self.param2_control.setRange(1, 255)
         self.param2_control.setValue(100)
         self.form_layout.addRow("Param2:", self.param2_control)
 
-        self.min_r_control = MySlider(decimals=2, orientation=QtCore.Qt.Horizontal)
+        self.min_r_control = SpinBoxSlider(decimals=2, orientation=QtCore.Qt.Horizontal)
         self.min_r_control.setSingleStep(1)
         self.min_r_control.setRange(0, 255)
         self.min_r_control.setValue(100)
         self.form_layout.addRow("Minimum Radius:", self.min_r_control)
 
-        self.max_r_control = MySlider(decimals=2, orientation=QtCore.Qt.Horizontal)
+        self.max_r_control = SpinBoxSlider(decimals=2, orientation=QtCore.Qt.Horizontal)
         self.max_r_control.setSingleStep(1)
         self.max_r_control.setRange(0, 255)
         self.max_r_control.setValue(100)

@@ -1,6 +1,6 @@
 import cv2 as cv
 
-from image_processing_widget.custom_components import MySlider
+from image_processing_widget.custom_components import SpinBoxSlider
 from image_processing_widget.defs import QtCore, QtWidgets
 from image_processing_widget.funcs.cv_enums import enum_border_types
 from image_processing_widget.process_plugin import ProcessPlugin
@@ -19,12 +19,16 @@ class Gradients(ProcessPlugin):
         self.ksize_control.addItems(["1", "3", "5", "7"])
         self.form_layout.addRow("Kernel Size:", self.ksize_control)
 
-        self.x_weight_control = MySlider(decimals=2, orientation=QtCore.Qt.Horizontal)
+        self.x_weight_control = SpinBoxSlider(
+            decimals=2, orientation=QtCore.Qt.Horizontal
+        )
         self.x_weight_control.setSingleStep(0.01)
         self.x_weight_control.setRange(0, 1)
         self.form_layout.addRow("X Gradient Weighting:", self.x_weight_control)
 
-        self.y_weight_control = MySlider(decimals=2, orientation=QtCore.Qt.Horizontal)
+        self.y_weight_control = SpinBoxSlider(
+            decimals=2, orientation=QtCore.Qt.Horizontal
+        )
         self.y_weight_control.setSingleStep(0.01)
         self.y_weight_control.setRange(0, 1)
         self.form_layout.addRow("Y Gradient Weighting:", self.y_weight_control)

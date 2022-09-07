@@ -1,6 +1,6 @@
 import cv2 as cv
 
-from image_processing_widget.custom_components import MySlider
+from image_processing_widget.custom_components import SpinBoxSlider
 from image_processing_widget.defs import QtCore, QtWidgets
 from image_processing_widget.process_plugin import ProcessPlugin
 
@@ -9,13 +9,13 @@ class InRange(ProcessPlugin):
     def __init__(self):
         super().__init__()
 
-        self.lower_control = MySlider(decimals=0, orientation=QtCore.Qt.Horizontal)
+        self.lower_control = SpinBoxSlider(decimals=0, orientation=QtCore.Qt.Horizontal)
         self.lower_control.setSingleStep(1)
         self.lower_control.setRange(0, 2**8 - 1)
         self.lower_control.valueChanged.connect(self.keep_range)
         self.form_layout.addRow("Lower:", self.lower_control)
 
-        self.upper_control = MySlider(decimals=0, orientation=QtCore.Qt.Horizontal)
+        self.upper_control = SpinBoxSlider(decimals=0, orientation=QtCore.Qt.Horizontal)
         self.upper_control.setSingleStep(1)
         self.upper_control.setRange(0, 2**8 - 1)
         self.upper_control.valueChanged.connect(self.keep_range)

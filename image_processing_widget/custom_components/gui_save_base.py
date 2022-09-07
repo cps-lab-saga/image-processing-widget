@@ -1,6 +1,6 @@
 import inspect
 
-from image_processing_widget.custom_components.my_slider import MySlider
+from image_processing_widget.custom_components.spinbox_slider import SpinBoxSlider
 from image_processing_widget.custom_components.path_edit import PathEdit
 from image_processing_widget.defs import QtWidgets
 from image_processing_widget.funcs import strtobool
@@ -30,7 +30,7 @@ class BaseGuiSave:
                 value = obj.isChecked()
             elif isinstance(obj, QtWidgets.QComboBox):
                 value = obj.currentText()
-            elif isinstance(obj, MySlider):
+            elif isinstance(obj, SpinBoxSlider):
                 value = obj.value()
             if value is not None:
                 settings.setValue(f"{self.save_heading}/{name}", value)
@@ -55,5 +55,5 @@ class BaseGuiSave:
                     obj.setChecked(strtobool(value))
                 elif isinstance(obj, QtWidgets.QComboBox):
                     obj.setCurrentText(value)
-                elif isinstance(obj, MySlider):
+                elif isinstance(obj, SpinBoxSlider):
                     obj.setValue(float(value))

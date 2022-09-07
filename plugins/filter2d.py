@@ -7,7 +7,7 @@ from fractions import Fraction
 import cv2 as cv
 import numpy as np
 
-from image_processing_widget.custom_components import MySlider
+from image_processing_widget.custom_components import SpinBoxSlider
 from image_processing_widget.defs import QtCore, QtWidgets, QtGui
 from image_processing_widget.funcs.cv_enums import enum_border_types
 from image_processing_widget.process_plugin import ProcessPlugin
@@ -17,14 +17,14 @@ class Filter2D(ProcessPlugin):
     def __init__(self):
         super().__init__()
 
-        self.x_control = MySlider(decimals=0, orientation=QtCore.Qt.Horizontal)
+        self.x_control = SpinBoxSlider(decimals=0, orientation=QtCore.Qt.Horizontal)
         self.x_control.setSingleStep(1)
         self.x_control.setRange(1, 100)
         self.x_control.setValue(3)
         self.x_control.valueChanged.connect(self.change_n_cols)
         self.form_layout.addRow("Kernel Width:", self.x_control)
 
-        self.y_control = MySlider(decimals=0, orientation=QtCore.Qt.Horizontal)
+        self.y_control = SpinBoxSlider(decimals=0, orientation=QtCore.Qt.Horizontal)
         self.y_control.setSingleStep(1)
         self.y_control.setRange(1, 100)
         self.y_control.setValue(3)

@@ -1,6 +1,6 @@
 import cv2 as cv
 
-from image_processing_widget.custom_components import MySlider
+from image_processing_widget.custom_components import SpinBoxSlider
 from image_processing_widget.defs import QtCore, QtWidgets
 from image_processing_widget.process_plugin import ProcessPlugin
 
@@ -9,7 +9,7 @@ class MedianBlur(ProcessPlugin):
     def __init__(self):
         super().__init__()
 
-        self.ksize_control = MySlider(
+        self.ksize_control = SpinBoxSlider(
             decimals=0, orientation=QtCore.Qt.Horizontal, parent=self
         )
         self.ksize_control.setSingleStep(1)

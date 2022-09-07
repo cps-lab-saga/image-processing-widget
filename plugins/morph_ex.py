@@ -1,6 +1,6 @@
 import cv2 as cv
 
-from image_processing_widget.custom_components import MySlider
+from image_processing_widget.custom_components import SpinBoxSlider
 from image_processing_widget.defs import QtCore, QtWidgets
 from image_processing_widget.funcs.cv_enums import (
     enum_morph_shapes,
@@ -22,14 +22,14 @@ class MorphEx(ProcessPlugin):
         self.shape.addItems(enum_morph_shapes.keys())
         self.form_layout.addRow("Shape:", self.shape)
 
-        self.size_control = MySlider(
+        self.size_control = SpinBoxSlider(
             decimals=0, orientation=QtCore.Qt.Horizontal, parent=self
         )
         self.size_control.setSingleStep(1)
         self.size_control.setRange(0, 30)
         self.form_layout.addRow("Size:", self.size_control)
 
-        self.iterations = MySlider(
+        self.iterations = SpinBoxSlider(
             decimals=0, orientation=QtCore.Qt.Horizontal, parent=self
         )
         self.iterations.setSingleStep(1)
