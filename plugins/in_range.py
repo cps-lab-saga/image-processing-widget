@@ -1,6 +1,6 @@
 import cv2 as cv
 
-from image_processing_widget.custom_components import SpinBoxSlider
+from image_processing_widget.custom_components import SpinBoxRangeSlider
 from image_processing_widget.defs import QtCore, QtWidgets
 from image_processing_widget.process_plugin import ProcessPlugin
 
@@ -9,20 +9,15 @@ class InRange(ProcessPlugin):
     def __init__(self):
         super().__init__()
 
-        self.lower_control = SpinBoxSlider(decimals=0, orientation=QtCore.Qt.Horizontal)
-        self.lower_control.setSingleStep(1)
-        self.lower_control.setRange(0, 2**8 - 1)
-        self.lower_control.valueChanged.connect(self.keep_range)
-        self.form_layout.addRow("Lower:", self.lower_control)
+        self.range_control = SpinBoxRangeSlider(
+            decimals=0, orientation=QtCore.Qt.Horizontal
+        )
+        self.range_control.setSingleStep(1)
+        self.range_control.setRange(0, 2**8 - 1)
+        self.range_control.setValue(0, 2**8 - 1)
+        self.form_layout.addRow("Range:", self.range_control)
 
-        self.upper_control = SpinBoxSlider(decimals=0, orientation=QtCore.Qt.Horizontal)
-        self.upper_control.setSingleStep(1)
-        self.upper_control.setRange(0, 2**8 - 1)
-        self.upper_control.valueChanged.connect(self.keep_range)
-        self.form_layout.addRow("Upper:", self.upper_control)
-
-        self.lower_control.valueChanged.connect(lambda _: self.settings_updated.emit())
-        self.upper_control.valueChanged.connect(lambda _: self.settings_updated.emit())
+        self.range_control.valueChanged.connect(lambda _: self.settings_updated.emit())
 
     def adjust_range(self, shape):
         pass
@@ -30,21 +25,8 @@ class InRange(ProcessPlugin):
     def operations_changed(self, text):
         pass
 
-    def keep_range(self, val):
-        if self.sender() == self.lower_control:
-            if val > self.upper_control.value():
-                self.blockSignals(True)
-                self.upper_control.setValue(val)
-                self.blockSignals(False)
-        elif self.sender() == self.upper_control:
-            if val < self.lower_control.value():
-                self.blockSignals(True)
-                self.lower_control.setValue(val)
-                self.blockSignals(False)
-
     def process_img(self, img):
-        lower = round(self.lower_control.value())
-        upper = round(self.upper_control.value())
+        lower, upper = (round(x) for x in self.range_control.value())
         return cv.inRange(img, lower, upper)
 
 

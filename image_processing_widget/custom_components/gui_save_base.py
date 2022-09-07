@@ -1,7 +1,10 @@
 import inspect
 
-from image_processing_widget.custom_components.spinbox_slider import SpinBoxSlider
 from image_processing_widget.custom_components.path_edit import PathEdit
+from image_processing_widget.custom_components.spinbox_range_slider import (
+    SpinBoxRangeSlider,
+)
+from image_processing_widget.custom_components.spinbox_slider import SpinBoxSlider
 from image_processing_widget.defs import QtWidgets
 from image_processing_widget.funcs import strtobool
 
@@ -32,6 +35,8 @@ class BaseGuiSave:
                 value = obj.currentText()
             elif isinstance(obj, SpinBoxSlider):
                 value = obj.value()
+            elif isinstance(obj, SpinBoxRangeSlider):
+                value = ",".join((str(x) for x in obj.value()))
             if value is not None:
                 settings.setValue(f"{self.save_heading}/{name}", value)
 
@@ -57,3 +62,5 @@ class BaseGuiSave:
                     obj.setCurrentText(value)
                 elif isinstance(obj, SpinBoxSlider):
                     obj.setValue(float(value))
+                elif isinstance(obj, SpinBoxRangeSlider):
+                    obj.setValue(*(float(x) for x in value.split(",")))

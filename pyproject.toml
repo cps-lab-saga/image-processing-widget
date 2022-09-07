@@ -27,6 +27,7 @@ Yapsy = "^1.12.2"
 numpy = "^1.23.2"
 PySide6 = "^6.3.1"
 opencv-contrib-python = "^4.6.0"
+superqt = "^0.3.5"
 
 [tool.poetry.dev-dependencies]
 black = "^22.8.0"

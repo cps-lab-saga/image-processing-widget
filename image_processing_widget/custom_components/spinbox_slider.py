@@ -17,27 +17,27 @@ class SpinBoxSlider(QtWidgets.QWidget):
         layout.setContentsMargins(0, 0, 0, 0)
 
         self.slider = QtWidgets.QSlider(*args, **kargs, parent=self)
-        self.slider.valueChanged.connect(self.emit_valueChanged)
-        self.slider.sliderReleased.connect(self.emit_valueChangeFinished)
+        self.slider.valueChanged.connect(self._emit_valueChanged)
+        self.slider.sliderReleased.connect(self._emit_valueChangeFinished)
 
         self.spinbox = QtWidgets.QDoubleSpinBox(self)
         self.spinbox.setSuffix(f" {unit}")
         self.spinbox.setDecimals(self._decimals)
-        self.spinbox.valueChanged.connect(self.emit_valueChanged)
-        self.spinbox.editingFinished.connect(self.emit_valueChangeFinished)
+        self.spinbox.valueChanged.connect(self._emit_valueChanged)
+        self.spinbox.editingFinished.connect(self._emit_valueChangeFinished)
 
         layout.addWidget(self.spinbox)
         layout.addWidget(self.slider)
 
-    def emit_valueChanged(self):
-        value = self.match_values(self.sender())
+    def _emit_valueChanged(self):
+        value = self._match_values(self.sender())
         self.valueChanged.emit(value)
 
-    def emit_valueChangeFinished(self):
-        value = self.match_values(self.sender())
+    def _emit_valueChangeFinished(self):
+        value = self._match_values(self.sender())
         self.valueChangeFinished.emit(value)
 
-    def match_values(self, sender):
+    def _match_values(self, sender):
         if sender == self.slider:
             value = float(self.slider.value()) / self._multi
             mod = round(
@@ -119,7 +119,7 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication([])
 
     widget = SpinBoxSlider(orientation=QtCore.Qt.Horizontal)
-    widget.setRange(0, 2**31)
+    widget.setRange(0, 2**30)
     widget.show()
 
     app.exec()
