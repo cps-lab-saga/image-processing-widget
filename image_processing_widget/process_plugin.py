@@ -15,7 +15,11 @@ class ProcessPlugin(QtWidgets.QWidget, BaseGuiSave):
         self.setObjectName(self.name)
         self.save_heading = f"Plugin.{self.name}"
 
-        self.form_layout = QtWidgets.QFormLayout(self)
+        self.main_layout = QtWidgets.QVBoxLayout(self)
+        self.main_layout.setContentsMargins(0, 0, 0, 0)
+
+        self.form_layout = QtWidgets.QFormLayout()
+        self.main_layout.addLayout(self.form_layout)
 
     def adjust_range(self, shape):
         pass
