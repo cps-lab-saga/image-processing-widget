@@ -1,27 +1,12 @@
-import pyqtgraph as pg
-
+from image_processing_widget.custom_components import RoiDataPlot
 from image_processing_widget.defs import QtWidgets
 
 
-class HSVHistogramPlot(QtWidgets.QWidget):
+class HSVHistogramPlot(RoiDataPlot):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
 
-        pg.setConfigOptions(
-            background=None,
-            foreground=self.palette().color(self.foregroundRole()),
-            antialias=True,
-        )
-
-        self.main_layout = QtWidgets.QVBoxLayout(self)
-        self.setLayout(self.main_layout)
-
-        self.plot_widget = pg.PlotWidget()
-        self.fig = self.plot_widget.getPlotItem()
-        self.fig.setMenuEnabled(False)
         self.fig.addLegend()
-        self.main_layout.addWidget(self.plot_widget)
-
         self.hue_line = self.fig.plot(
             fillLevel=0, pen=(255, 127, 14), brush=(255, 127, 14, 50), name="Hue"
         )

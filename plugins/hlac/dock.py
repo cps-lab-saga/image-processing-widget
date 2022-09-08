@@ -20,7 +20,7 @@ class HlacDock(BaseDock):
             self.hide()
 
     def set_data(self, data):
-        self.hlac_plot.set_feature_values(data)
+        self.hlac_plot.set_data(data)
 
 
 if __name__ == "__main__":

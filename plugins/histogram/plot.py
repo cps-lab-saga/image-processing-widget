@@ -1,28 +1,14 @@
-import pyqtgraph as pg
-
+from image_processing_widget.custom_components import RoiDataPlot
 from image_processing_widget.defs import QtWidgets
 
 
-class HistogramPlot(QtWidgets.QWidget):
+class HistogramPlot(RoiDataPlot):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
 
-        pg.setConfigOptions(
-            background=None,
-            foreground=self.palette().color(self.foregroundRole()),
-            antialias=True,
+        self.black_line = self.fig.plot(
+            fillLevel=0, pen=(0, 0, 0), brush=(0, 0, 0, 50), name="Intensity"
         )
-
-        self.main_layout = QtWidgets.QVBoxLayout(self)
-        self.setLayout(self.main_layout)
-
-        self.plot_widget = pg.PlotWidget()
-        self.fig = self.plot_widget.getPlotItem()
-        self.fig.setMenuEnabled(False)
-        self.fig.addLegend()
-        self.main_layout.addWidget(self.plot_widget)
-
-        self.black_line = self.fig.plot(fillLevel=0, pen=(0, 0, 0), brush=(0, 0, 0, 50))
         self.red_line = self.fig.plot(
             fillLevel=0, pen=(255, 0, 0), brush=(255, 0, 0, 50), name="Red"
         )
@@ -33,13 +19,19 @@ class HistogramPlot(QtWidgets.QWidget):
             fillLevel=0, pen=(0, 0, 255), brush=(0, 0, 255, 50), name="Blue"
         )
 
-    def set_rgb(self, histr):
+    def set_data(self, histr):
+        if isinstance(histr, dict):
+            self._set_rgb(histr)
+        else:
+            self._set_grayscale(histr)
+
+    def _set_rgb(self, histr):
         self.black_line.setData([0])
         self.red_line.setData(histr["r"])
         self.green_line.setData(histr["g"])
         self.blue_line.setData(histr["b"])
 
-    def set_grayscale(self, histr):
+    def _set_grayscale(self, histr):
         self.black_line.setData(histr)
         self.red_line.setData([0])
         self.green_line.setData([0])

@@ -21,9 +21,9 @@ class HistogramDock(BaseDock):
 
     def set_data(self, histr):
         if isinstance(histr, dict):
-            self.histogram_plot.set_rgb(histr)
+            self.histogram_plot._set_rgb(histr)
         else:
-            self.histogram_plot.set_grayscale(histr)
+            self.histogram_plot._set_grayscale(histr)
 
 
 if __name__ == "__main__":
