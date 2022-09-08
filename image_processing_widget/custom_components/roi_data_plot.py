@@ -56,14 +56,14 @@ class RoiDataPlot(QtWidgets.QWidget):
 
         with contextlib.suppress(Exception):
             mouse_point = self.fig.vb.mapSceneToView(pos)
-            x = round(mouse_point.x())
-            y = round(mouse_point.y())
+            x = mouse_point.x()
+            y = mouse_point.y()
             self.v_crosshair.setPos(x)
             self.h_crosshair.setPos(y)
             xlim, ylim = self.fig.viewRange()
-            self.v_crosshair_label.setText(str(x))
+            self.v_crosshair_label.setText("{0:.6g}".format(x))
             self.v_crosshair_label.setPos(x, ylim[0])
-            self.h_crosshair_label.setText(str(y))
+            self.h_crosshair_label.setText("{0:.6g}".format(y))
             self.h_crosshair_label.setPos(xlim[0], y)
 
     def mouse_double_clicked(self, evt):
