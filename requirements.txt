@@ -1,8 +1,9 @@
 numpy==1.23.2; python_version >= "3.8"
-opencv-python==4.5.5.64; python_version >= "3.6"
+opencv-contrib-python==4.6.0.66; python_version >= "3.6"
 packaging==21.3; python_version >= "3.7" \
     --hash=sha256:ef103e05f519cdc783ae24ea4e2e0f508a9c99b2d4969652eed6a2e1ea5bd522 \
     --hash=sha256:dd47c42927d89ab911e606518907cc2d3a1f38bbd026385970643f9c5b8ecfeb
+pygments==2.13.0; python_version >= "3.7"
 pyparsing==3.0.9; python_full_version >= "3.6.8" and python_version >= "3.7" \
     --hash=sha256:5026bae9a10eeaefb61dab2f09052b9f4307d44aee4eda64b309723d8d206bbc \
     --hash=sha256:2b020ecf7d21b687f219b71ecad3631f644a47f01403fa1d1036b0c6416d70fb
@@ -27,4 +28,8 @@ shiboken6==6.3.1; python_version >= "3.6" and python_version < "3.11" \
     --hash=sha256:6393aa330101b098631a88dfb99b6b46794046c7f63b5c1ac93ae2fcef4773ff \
     --hash=sha256:aad9aa8e7ecd3c889cc789e41abf3990101126b5b02edfcf87f1ef331c9dc45a \
     --hash=sha256:cb9cf4ad858e59237642bf6b8be1fe6f19cb090799ff00e4c2643768d73e8ebe
+superqt==0.3.5; python_version >= "3.7"
+typing-extensions==4.3.0; python_version >= "3.7" \
+    --hash=sha256:25642c956049920a5aa49edcdd6ab1e06d7e5d467fc00e0506c44ac86fbfca02 \
+    --hash=sha256:e6d2677a32f47fc7eb2795db1dd15c1f34eff616bcaf2cfb5e997f854fa1c4a6
 yapsy==1.12.2
