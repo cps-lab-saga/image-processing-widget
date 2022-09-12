@@ -47,6 +47,8 @@ class ImageWidget(QtWidgets.QWidget):
         self.fig.setMenuEnabled(False)
         # fig.hideAxis('left')
         # fig.hideAxis('bottom')
+        self.fig.setLabel("left", "Pixels")
+        self.fig.setLabel("bottom", "Pixels")
 
         self.v_crosshair = pg.InfiniteLine(
             pos=pg.Point(-1000, -1000), angle=90, movable=False, pen=self.crosshair_pen

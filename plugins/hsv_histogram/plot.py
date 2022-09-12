@@ -6,6 +6,9 @@ class HSVHistogramPlot(RoiDataPlot):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
 
+        self.fig.setLabel("left", "Frequency")
+        self.fig.setLabel("bottom", "Intensity")
+
         self.fig.addLegend()
         self.hue_line = self.fig.plot(
             fillLevel=0, pen=(255, 127, 14), brush=(255, 127, 14, 50), name="Hue"

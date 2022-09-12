@@ -6,6 +6,9 @@ class HistogramPlot(RoiDataPlot):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
 
+        self.fig.setLabel("left", "Frequency")
+        self.fig.setLabel("bottom", "Intensity")
+
         self.black_line = self.fig.plot(
             fillLevel=0, pen=(0, 0, 0), brush=(0, 0, 0, 50), name="Intensity"
         )
