@@ -1,4 +1,4 @@
-# An Image Processing Widget
+# An Extensible Image Processing Widget
 
 GUI to explore OpenCV image processing functions.
 
@@ -29,10 +29,10 @@ Download latest release from [here](https://github.com/fukuda-lab-saga/image-pro
 - Double-click the left mouse button to activate ROI.
 - Double-click the right mouse button the activate crosshairs.
 
-Drag and drop image onto widget. All read images are converted to 8-bit.
-![Screenshot 1](/screenshots/screenshot1.png?raw=true "Screenshot 1")
-
+Drag and drop image onto widget. 
 Select process and adjust parameters.
+
+![Screenshot 1](/screenshots/screenshot1.png?raw=true "Screenshot 1")
 ![Screenshot 2](/screenshots/screenshot2.png?raw=true "Screenshot 2")
 ![Screenshot 3](/screenshots/screenshot3.png?raw=true "Screenshot 3")
 
@@ -41,6 +41,6 @@ Select process and adjust parameters.
 The plugins activated are listed after `process_plugins =` and `roi_plugins =`  in the config file and are seperated by
 commas.
 Add and remove these as needed. Available plugins can be found in the plugins folder and their names are shown in the
-.image-processing-plugin files.
+“.image-processing-plugin" files.
 
-There are 2 read modes (`grayscale` and `color`) and 2 display modes  (`auto` and `8-bit`). Change these as needed.
+There are 2 display modes  (`auto` and `8-bit`). Change these as needed.

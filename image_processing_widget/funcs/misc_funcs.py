@@ -24,12 +24,14 @@ def strtobool(val):
 
 
 def imread(filename: Path, flags):
+    if not filename.is_file():
+        raise ValueError("No such file.")
     data = np.fromfile(str(filename), dtype=np.uint8)
     img = cv.imdecode(data, flags)
     if img is not None:
         return img
     else:
-        raise ValueError("Invalid file.")
+        raise ValueError("Could not read file.")
 
 
 def imwrite(filename: Path, img):
