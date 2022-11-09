@@ -3,7 +3,7 @@ import math
 import cv2 as cv
 import numpy as np
 
-from image_processing_widget.custom_components import SpinBoxSlider
+from image_processing_widget.custom_components import SpinBoxRangeSlider, SpinBoxSlider
 from image_processing_widget.defs import QtCore, QtWidgets
 from image_processing_widget.process_plugin import ProcessPlugin
 
@@ -36,21 +36,13 @@ class DetectLines(ProcessPlugin):
         self.threshold_control.setRange(0, 255)
         self.form_layout.addRow("Threshold:", self.threshold_control)
 
-        self.min_theta_control = SpinBoxSlider(
+        self.theta_range_control = SpinBoxRangeSlider(
             decimals=0, orientation=QtCore.Qt.Horizontal
         )
-        self.min_theta_control.setSingleStep(1)
-        self.min_theta_control.setRange(0, 180)
-        self.min_theta_control.valueChanged.connect(self.keep_range)
-        self.form_layout.addRow("Min Theta:", self.min_theta_control)
-
-        self.max_theta_control = SpinBoxSlider(
-            decimals=0, orientation=QtCore.Qt.Horizontal
-        )
-        self.max_theta_control.setSingleStep(1)
-        self.max_theta_control.setRange(0, 180)
-        self.max_theta_control.valueChanged.connect(self.keep_range)
-        self.form_layout.addRow("Max Theta:", self.max_theta_control)
+        self.theta_range_control.setSingleStep(1)
+        self.theta_range_control.setRange(0, 180)
+        self.theta_range_control.setValue(0, 1)
+        self.form_layout.addRow("Theta Range:", self.theta_range_control)
 
         self.min_length_control = SpinBoxSlider(
             decimals=0, orientation=QtCore.Qt.Horizontal
@@ -73,10 +65,7 @@ class DetectLines(ProcessPlugin):
         self.threshold_control.valueChanged.connect(
             lambda _: self.settings_updated.emit()
         )
-        self.min_theta_control.valueChanged.connect(
-            lambda _: self.settings_updated.emit()
-        )
-        self.max_theta_control.valueChanged.connect(
+        self.theta_range_control.valueChanged.connect(
             lambda _: self.settings_updated.emit()
         )
         self.min_length_control.valueChanged.connect(
@@ -89,33 +78,14 @@ class DetectLines(ProcessPlugin):
             lambda _: self.settings_updated.emit()
         )
 
-    def adjust_range(self, shape):
-        pass
-
-    def keep_range(self, val):
-        if self.sender() == self.min_theta_control:
-            if val > self.max_theta_control.value():
-                self.blockSignals(True)
-                self.max_theta_control.setValue(val)
-                self.blockSignals(False)
-        elif self.sender() == self.max_theta_control:
-            if val < self.min_theta_control.value():
-                self.blockSignals(True)
-                self.min_theta_control.setValue(val)
-                self.blockSignals(False)
-
     def operations_changed(self, text):
         if text == "Standard Hough Lines":
-            self.min_theta_control.setEnabled(True)
-            self.max_theta_control.setEnabled(True)
-
+            self.theta_range_control.setEnabled(True)
             self.min_length_control.setEnabled(False)
             self.max_gap_control.setEnabled(False)
 
         elif text == "Probabilistic Hough Lines":
-            self.min_theta_control.setEnabled(False)
-            self.max_theta_control.setEnabled(False)
-
+            self.theta_range_control.setEnabled(False)
             self.min_length_control.setEnabled(True)
             self.max_gap_control.setEnabled(True)
 
@@ -127,8 +97,7 @@ class DetectLines(ProcessPlugin):
         theta = np.radians(self.theta_control.value())
         threshold = round(self.threshold_control.value())
         min_length = self.min_length_control.value()
-        min_theta = self.min_theta_control.value()
-        max_theta = self.max_theta_control.value()
+        min_theta, max_theta = self.theta_range_control.value()
         max_gap = self.max_gap_control.value()
         operation = self.operation.currentText()
         if operation == "Standard Hough Lines":

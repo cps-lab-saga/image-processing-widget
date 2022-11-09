@@ -1,6 +1,6 @@
 import cv2 as cv
 
-from image_processing_widget.custom_components import SpinBoxSlider
+from image_processing_widget.custom_components import SpinBoxRangeSlider
 from image_processing_widget.defs import QtCore, QtWidgets
 from image_processing_widget.process_plugin import ProcessPlugin
 
@@ -9,17 +9,13 @@ class Canny(ProcessPlugin):
     def __init__(self):
         super().__init__()
 
-        self.lower_thresh = SpinBoxSlider(decimals=0, orientation=QtCore.Qt.Horizontal)
-        self.lower_thresh.setSingleStep(1)
-        self.lower_thresh.setRange(0, 2**8 - 1)
-        self.lower_thresh.valueChanged.connect(self.keep_range)
-        self.form_layout.addRow("Lower:", self.lower_thresh)
-
-        self.upper_thresh = SpinBoxSlider(decimals=0, orientation=QtCore.Qt.Horizontal)
-        self.upper_thresh.setSingleStep(1)
-        self.upper_thresh.setRange(0, 2**8 - 1)
-        self.upper_thresh.valueChanged.connect(self.keep_range)
-        self.form_layout.addRow("Upper:", self.upper_thresh)
+        self.threshold_range_control = SpinBoxRangeSlider(
+            decimals=0, orientation=QtCore.Qt.Horizontal
+        )
+        self.threshold_range_control.setSingleStep(1)
+        self.threshold_range_control.setRange(0, 2**8 - 1)
+        self.threshold_range_control.setValue(0, 2**8 - 1)
+        self.form_layout.addRow("Threshold:", self.threshold_range_control)
 
         self.ksize_control = QtWidgets.QComboBox(self)
         self.ksize_control.addItems(["3", "5", "7"])
@@ -35,8 +31,9 @@ class Canny(ProcessPlugin):
         self.ksize_control.currentTextChanged.connect(
             lambda _: self.settings_updated.emit()
         )
-        self.lower_thresh.valueChanged.connect(lambda _: self.settings_updated.emit())
-        self.upper_thresh.valueChanged.connect(lambda _: self.settings_updated.emit())
+        self.threshold_range_control.valueChanged.connect(
+            lambda _: self.settings_updated.emit()
+        )
 
     def adjust_range(self, shape):
         pass
@@ -44,26 +41,13 @@ class Canny(ProcessPlugin):
     def operations_changed(self, text):
         pass
 
-    def keep_range(self, val):
-        if self.sender() == self.lower_thresh:
-            if val > self.upper_thresh.value():
-                self.blockSignals(True)
-                self.upper_thresh.setValue(val)
-                self.blockSignals(False)
-        elif self.sender() == self.upper_thresh:
-            if val < self.lower_thresh.value():
-                self.blockSignals(True)
-                self.lower_thresh.setValue(val)
-                self.blockSignals(False)
-
     def process_img(self, img):
         if self.grad_type.currentText() == "|dI/dx|+|dI/dy|":
             l2grad = False
         elif self.grad_type.currentText() == "√((dI/dx)^2+(dI/dy)^2)":
             l2grad = True
         ksize = int(self.ksize_control.currentText())
-        lower = round(self.lower_thresh.value())
-        upper = round(self.upper_thresh.value())
+        lower, upper = self.threshold_range_control.value()
         return cv.Canny(img, lower, upper, apertureSize=ksize, L2gradient=l2grad)
 
 
