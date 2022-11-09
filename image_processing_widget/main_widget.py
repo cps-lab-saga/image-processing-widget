@@ -15,7 +15,6 @@ from image_processing_widget.defs import (
     settings_file,
     resource_dir,
     log_file,
-    ReadMode,
 )
 from image_processing_widget.display_widget.image_widget import ImageWidget
 from image_processing_widget.docks import ControlsDock
@@ -45,7 +44,6 @@ class MainWidget(QtWidgets.QMainWindow):
             f"Looking for config file in {', '.join([str(x) for x in self.project_paths])}."
         )
         self.config_parser = self.read_config()
-        self.read_mode = self.get_read_mode(self.config_parser)
 
         self.selected_process_plugins = self.get_plugins(
             self.config_parser, "process_plugins"
@@ -71,6 +69,7 @@ class MainWidget(QtWidgets.QMainWindow):
         self.processed_img = None
 
         self.controls_dock = ControlsDock()
+        self.controls_dock.mode_changed.connect(lambda: self.read_img(None))
         self.controls_dock.settings_updated.connect(self.start_process_image)
         self.controls_dock.peek_started.connect(self.peek_original_img)
         self.controls_dock.peek_ended.connect(self.show_processed_image)
@@ -140,26 +139,6 @@ class MainWidget(QtWidgets.QMainWindow):
             ]
         else:
             return []
-
-    @staticmethod
-    def get_read_mode(config_parser):
-        if config_parser is None or not config_parser.has_option(
-            "Image Config", "read_mode"
-        ):
-            logging.warning("Using default read_mode: COLOR")
-            return ReadMode.COLOR
-
-        read_mode = config_parser.get("Image Config", "read_mode").strip()
-        if read_mode.upper() == "COLOR":
-            logging.info(f"read_mode: {read_mode}")
-            return ReadMode.COLOR
-        elif read_mode.upper() == "GRAYSCALE":
-            logging.info(f"read_mode: {read_mode}")
-            return ReadMode.GRAYSCALE
-        else:
-            logging.warning(f"Invalid read_mode: {read_mode}")
-            logging.warning("Using default read_mode: COLOR")
-            return ReadMode.COLOR
 
     def setup_process_plugins(self, plugin_manager, selected_plugins):
         available_plugins = {
@@ -244,15 +223,24 @@ class MainWidget(QtWidgets.QMainWindow):
         self.img_widget.set_image(self.processed_img)
 
     def read_img(self, path):
-        self.img_path = path
-        if self.read_mode == ReadMode.GRAYSCALE:
-            self.original_img = imread(self.img_path, cv.IMREAD_GRAYSCALE)
-        elif self.read_mode == ReadMode.COLOR:
-            self.original_img = imread(self.img_path, cv.IMREAD_COLOR)
-            self.original_img = cv.cvtColor(self.original_img, cv.COLOR_BGR2RGB)
+        if path is not None:
+            self.img_path = path
+        if self.img_path is None:
+            return
+
+        try:
+            if self.controls_dock.image_mode_groupbox.mode == "grayscale":
+                self.original_img = imread(self.img_path, cv.IMREAD_GRAYSCALE)
+            elif self.controls_dock.image_mode_groupbox.mode == "color":
+                self.original_img = imread(self.img_path, cv.IMREAD_COLOR)
+                self.original_img = cv.cvtColor(self.original_img, cv.COLOR_BGR2RGB)
+            else:
+                raise ValueError("Invalid read mode.")
+            self.controls_dock.process_groupbox.adjust_range(self.original_img.shape)
+        except ValueError as e:
+            self.error_dialog(str(e))
 
         self.start_process_image()
-        self.controls_dock.process_groupbox.adjust_range(self.original_img.shape)
 
     def roi_shown(self, show):
         for plugin in self.roi_plugins.values():

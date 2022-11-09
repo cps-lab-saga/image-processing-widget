@@ -52,11 +52,6 @@ def resource_dir() -> Path:
     return project_root() / "resource"
 
 
-class ReadMode(Enum):
-    GRAYSCALE = auto()
-    COLOR = auto()
-
-
 class DisplayMode(Enum):
     AUTO = auto()
     BIT8 = auto()

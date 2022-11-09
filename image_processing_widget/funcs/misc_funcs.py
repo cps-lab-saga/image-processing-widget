@@ -25,7 +25,11 @@ def strtobool(val):
 
 def imread(filename: Path, flags):
     data = np.fromfile(str(filename), dtype=np.uint8)
-    return cv.imdecode(data, flags)
+    img = cv.imdecode(data, flags)
+    if img is not None:
+        return img
+    else:
+        raise ValueError("Invalid file.")
 
 
 def imwrite(filename: Path, img):
