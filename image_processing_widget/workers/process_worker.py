@@ -1,3 +1,4 @@
+import logging
 from queue import Queue
 
 from image_processing_widget.defs import QtCore, Signal
@@ -23,12 +24,13 @@ class ProcessWorker(QtCore.QObject):
                 self.finished.emit(processed_image)
 
     def process_img(self, img):
+        process_widget = self.dock.process_groupbox.stacked_layout.currentWidget()
         try:
-            process_widget = self.dock.process_groupbox.stacked_layout.currentWidget()
             oriented_image = self.dock.orient_groupbox.orient_img(img)
             return process_widget.process_img(oriented_image)
         except Exception as e:
-            self.process_failed.emit(str(e))
+            logging.error(f"{process_widget.name}: {e}")
+            self.process_failed.emit(f"{e}")
             return
 
     def stop(self):

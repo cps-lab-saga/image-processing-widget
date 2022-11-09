@@ -29,8 +29,10 @@ class ImageModeGroupBox(QtWidgets.QGroupBox, BaseGuiSave):
         self.grayscale_button.click()
 
     def mode_toggled(self):
-        self.mode = self.sender().text().lower()
-        self.mode_changed.emit()
+        button = self.sender()
+        if button.isChecked():
+            self.mode = button.text().lower()
+            self.mode_changed.emit()
 
 
 if __name__ == "__main__":

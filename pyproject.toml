@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "image-processing-widget"
-version = "0.2.4"
+version = "0.2.5"
 description = "GUI to explore OpenCV image processing functions"
 authors = ["wenliangyeoh <wlyeoh@cc.saga-u.ac.jp>"]
 readme = "README.md"

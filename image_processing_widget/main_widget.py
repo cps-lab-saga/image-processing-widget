@@ -199,6 +199,7 @@ class MainWidget(QtWidgets.QMainWindow):
     def finished_process_image(self, processed_image):
         if processed_image is None:
             self.setCursor(QtCore.Qt.ArrowCursor)
+            self.peek_original_img()
             return
 
         self.processed_img = processed_image
