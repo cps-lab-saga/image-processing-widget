@@ -22,7 +22,7 @@ class FitBoundary(ProcessPlugin):
 
     def process_img(self, img):
         if img.ndim > 2:
-            raise Exception("Only accepts 8-bit binary source image")
+            raise Exception("Only available in grayscale mode.")
 
         img_binary = (img > 0).astype(np.uint8)
         points = cv.findNonZero(img_binary).squeeze()

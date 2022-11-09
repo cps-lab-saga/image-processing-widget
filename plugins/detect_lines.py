@@ -91,7 +91,7 @@ class DetectLines(ProcessPlugin):
 
     def process_img(self, img):
         if img.ndim > 2:
-            raise Exception("Only accepts 8-bit binary source image")
+            raise Exception("Only available in grayscale mode.")
 
         rho = self.rho_control.value()
         theta = np.radians(self.theta_control.value())

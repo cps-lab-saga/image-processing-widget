@@ -63,7 +63,7 @@ class DetectCircles(ProcessPlugin):
 
     def process_img(self, img):
         if img.ndim > 2:
-            raise Exception("Only accepts 8-bit binary source image")
+            raise Exception("Only available in grayscale mode.")
 
         dp = self.dp_control.value()
         min_dist = self.min_dist_control.value()
