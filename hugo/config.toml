@@ -3,15 +3,27 @@ languageCode = 'en-us'
 title = 'Image Processing Widget'
 theme = 'PaperMod'
 
+
 [params]
 description = "GUI to explore OpenCV image processing functions."
 author = "WL Yeoh"
+    [params.homeInfoParams]
+    Title = "Links"
+
+    [[params.socialIcons]]
+    name = "GitHub"
+    url = "https://github.com/cps-lab-saga/image-processing-widget"
+
+    [[params.socialIcons]]
+    name = "Home Page"
+    url = "https://cps.ip.is.saga-u.ac.jp/"
+
 
 [module]
-[[module.mounts]]
-source = "../README.md"
-target = "content/_index.md"
+    [[module.mounts]]
+    source = "../README.md"
+    target = "content/_index.md"
 
-[[module.mounts]]
-source = '../screenshots'
-target = 'static/screenshots'
+    [[module.mounts]]
+    source = '../screenshots'
+    target = 'static/screenshots'

@@ -1,4 +1,4 @@
-# An Extensible Image Processing Widget
+# [An Extensible Image Processing Widget](https://cps-lab-saga.github.io/image-processing-widget/)
 
 GUI to explore OpenCV image processing functions.
 
