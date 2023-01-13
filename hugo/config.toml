@@ -1,0 +1,27 @@
+baseURL = "https://cps-lab-saga/github.io/image-processing-widget"
+languageCode = 'en-us'
+title = 'Image Processing Widget'
+theme = 'PaperMod'
+
+[minify]
+disableXML = true
+minifyOutput = true
+
+[params]
+description = "GUI to explore OpenCV image processing functions."
+author = "WL Yeoh"
+defaultTheme = "auto"
+displayFullLangName = true
+ShowPostNavLinks = true
+ShowBreadCrumbs = true
+ShowCodeCopyButtons = true
+ShowToc = true
+
+[module]
+[[module.mounts]]
+source = "../README.md"
+target = "content/_index.md"
+
+[[module.mounts]]
+source = '../screenshots'
+target = 'static/screenshots'

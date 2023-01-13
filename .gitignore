@@ -189,3 +189,5 @@ dmypy.json
 cython_debug/
 
 image_processing_restore.ini
+
+.hugo_build.lock
