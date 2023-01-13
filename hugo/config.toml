@@ -3,19 +3,9 @@ languageCode = 'en-us'
 title = 'Image Processing Widget'
 theme = 'PaperMod'
 
-[minify]
-disableXML = true
-minifyOutput = true
-
 [params]
 description = "GUI to explore OpenCV image processing functions."
 author = "WL Yeoh"
-defaultTheme = "auto"
-displayFullLangName = true
-ShowPostNavLinks = true
-ShowBreadCrumbs = true
-ShowCodeCopyButtons = true
-ShowToc = true
 
 [module]
 [[module.mounts]]
