@@ -1,4 +1,4 @@
-baseURL = "https://cps-lab-saga/github.io/image-processing-widget"
+baseURL = "https://cps-lab-saga.github.io/image-processing-widget/"
 languageCode = 'en-us'
 title = 'Image Processing Widget'
 theme = 'PaperMod'
