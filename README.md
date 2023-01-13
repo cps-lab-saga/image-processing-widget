@@ -32,9 +32,9 @@ Download latest release from [here](https://github.com/fukuda-lab-saga/image-pro
 Drag and drop image onto widget. 
 Select process and adjust parameters.
 
-![Screenshot 1](/screenshots/screenshot1.png?raw=true "Screenshot 1")
-![Screenshot 2](/screenshots/screenshot2.png?raw=true "Screenshot 2")
-![Screenshot 3](/screenshots/screenshot3.png?raw=true "Screenshot 3")
+![Screenshot 1](screenshots/screenshot1.png?raw=true "Screenshot 1")
+![Screenshot 2](screenshots/screenshot2.png?raw=true "Screenshot 2")
+![Screenshot 3](screenshots/screenshot3.png?raw=true "Screenshot 3")
 
 ## Config
 
