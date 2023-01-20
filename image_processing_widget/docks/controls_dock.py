@@ -21,7 +21,10 @@ class ControlsDock(BaseDock):
         super().__init__()
 
         self.setWindowTitle("Controls")
-        self.setFeatures(self.DockWidgetFloatable | self.DockWidgetMovable)
+        self.setFeatures(
+            self.DockWidgetFeature.DockWidgetFloatable
+            | self.DockWidgetFeature.DockWidgetMovable
+        )
 
         self.image_mode_groupbox = ImageModeGroupBox(self.dock_contents)
         self.image_mode_groupbox.mode_changed.connect(self.mode_changed.emit)

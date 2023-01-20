@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "image-processing-widget"
-version = "0.2.5"
+version = "0.2.6"
 description = "GUI to explore OpenCV image processing functions"
 authors = ["wenliangyeoh <wlyeoh@cc.saga-u.ac.jp>"]
 readme = "README.md"
@@ -20,19 +20,19 @@ include = [
 
 
 [tool.poetry.dependencies]
-python = ">3.10, <3.11"
-pyqtgraph = "^0.13.1"
-QtAwesome = "^1.1.1"
-Yapsy = "^1.12.2"
-numpy = "^1.23.4"
-PySide6 = "~6.3"
-opencv-contrib-python = "^4.6.0"
-superqt = "^0.3.8"
+python = ">3.10, <3.12"
+pyqtgraph = "~0.13"
+QtAwesome = "~1.1"
+Yapsy = "~1.12"
+numpy = "~1.24"
+PySide6 = "~6.4"
+opencv-contrib-python = "~4.7"
+superqt = "~0.4"
 
 [tool.poetry.dev-dependencies]
-black = "^22.10.0"
-pytest = "^7.2.0"
-pyinstaller = "^5.6.2"
+black = "~22.12.0"
+pytest = "~7.2"
+pyinstaller = "~5.7"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

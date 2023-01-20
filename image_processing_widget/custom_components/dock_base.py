@@ -13,7 +13,9 @@ class BaseDock(QtWidgets.QDockWidget, BaseGuiSave):
         self.setWidget(self.dock_contents)
         self.setAllowedAreas(QtCore.Qt.AllDockWidgetAreas)
         self.setFeatures(
-            self.DockWidgetFloatable | self.DockWidgetMovable | self.DockWidgetClosable
+            self.DockWidgetFeature.DockWidgetFloatable
+            | self.DockWidgetFeature.DockWidgetMovable
+            | self.DockWidgetFeature.DockWidgetClosable
         )
 
         self.dock_layout = QtWidgets.QBoxLayout(
