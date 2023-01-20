@@ -19,13 +19,13 @@ class ArucoDetect(ProcessPlugin):
         )
 
     def process_img(self, img):
-        aruco_dict = cv.aruco.Dictionary_get(
+        aruco_dict = cv.aruco.getPredefinedDictionary(
             enum_aruco_dict[self.aruco_set.currentText()]
         )
-        aruco_params = cv.aruco.DetectorParameters_create()
-        corners, ids, rejected = cv.aruco.detectMarkers(
-            img, aruco_dict, parameters=aruco_params
-        )
+        aruco_params = cv.aruco.DetectorParameters()
+        aruco_detector = cv.aruco.ArucoDetector(aruco_dict, aruco_params)
+
+        corners, ids, rejected = aruco_detector.detectMarkers(img)
 
         if len(corners) > 0 and img.ndim <= 2:
             img = cv.cvtColor(img, cv.COLOR_GRAY2BGR)
