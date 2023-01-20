@@ -24,7 +24,9 @@ class HlacPlugin(RoiPlugin):
 def extract_hlac(img):
     result = []
     for m in mask:
-        feature_map = cv.filter2D(src=img, ddepth=-1, kernel=m)
+        feature_map = cv.filter2D(
+            src=img, ddepth=-1, kernel=m, borderType=cv.BORDER_ISOLATED
+        )
         count = np.sum(feature_map == np.sum(m))
         result.append(count)
     return np.array(result)
