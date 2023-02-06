@@ -4,7 +4,7 @@ version = "0.2.7"
 description = "GUI to explore OpenCV image processing functions"
 authors = ["wenliangyeoh <wlyeoh@cc.saga-u.ac.jp>"]
 readme = "README.md"
-repository = "https://github.com/fukuda-lab-saga/image-processing-widget"
+repository = "https://github.com/cps-lab-saga/image-processing-widget"
 keywords = ["opencv", "gui", "pyside6"]
 classifiers = [
     "License :: OSI Approved :: MIT License",
