@@ -1,6 +1,8 @@
 import importlib.metadata
+import os
 from enum import Enum, auto
 from pathlib import Path
+from sys import platform
 
 __version__ = importlib.metadata.version("image_processing_widget")
 
@@ -22,6 +24,9 @@ except ModuleNotFoundError:
         from PyQt5.QtCore import pyqtSignal as Signal, pyqtSlot as Slot
 
         backend_name = "pyqt5"
+
+if platform == "linux" or platform == "linux2":
+    os.environ["QT_QPA_PLATFORM"] = "xcb"
 
 
 def project_root() -> Path:
